@@ -14,6 +14,14 @@ module.exports = {
             return b;
         }
         let data = await ranks.findOne({ guild_id: message.guild.id, rank_id: 100 });
+        if(!data) {
+            for(var j = 100; j >= 1; j = j - 1) {
+                const newGuild = new ranks({ guild_id: `${guild.id}`, rank_id: j, role_id: '0'});
+                newGuild.save();
+            }
+            setTimeout(() => {}, 1000);
+            data = await ranks.findOne({ guild_id: message.guild.id, rank_id: 100 });
+        }
         let datacheck = data.role_id;
         const target = message.author;
         const member = message.guild.member(target);
