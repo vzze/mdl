@@ -1,0 +1,38 @@
+const { DiscordAPIError } = require("discord.js")
+const Discord = require(`discord.js`);
+const pref = require('../config/config.json')
+
+module.exports = {
+    name: 'removecard',
+    description: "Removes your custom card and reverts to the original one.",
+    usage: `\`${pref.prefix}removecard\``,
+    cooldown: 3,
+    async execute(client, message, args, users, ranks, Canvas, lvls) {
+
+        const u = await users.findOne({ user_id: message.author.id });
+        if(u.rankcardlink!='0') {
+            var ok = 1;
+            try {
+            await u.updateOne({ rankcardlink: 0 });
+            await u.save();
+            } catch (e) {
+                ok = 0;
+                const l2embed = new Discord.MessageEmbed()
+                    .setColor('#dd4545')
+                    .setDescription(`**Caught an error.**`)
+                message.channel.send(l2embed);
+            }
+            if(ok==1) {
+                const l3embed = new Discord.MessageEmbed()
+                    .setColor('#ad26d1')
+                    .setDescription(`**Succesfully removed your rank card.**`);
+                message.channel.send(l3embed);
+            }
+        } else {
+            const l3embed = new Discord.MessageEmbed()
+                .setColor('#dd4545')
+                .setDescription(`**You don\'t have a rank card in the first place.**`)
+            message.channel.send(l3embed);
+        }
+    }
+}

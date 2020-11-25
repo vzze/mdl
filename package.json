@@ -1,0 +1,28 @@
+{
+  "name": "project08",
+  "version": "1.6.2",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "canvas": "^2.6.1",
+    "discord.js": "^12.5.0",
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.10.15"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vzze/mdl.git"
+  },
+  "keywords": [],
+  "author": "V",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vzze/mdl/issues"
+  },
+  "homepage": "https://github.com/vzze/mdl#readme"
+}
