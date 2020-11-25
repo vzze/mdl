@@ -68,6 +68,9 @@ module.exports = {
             }
         }
 
+        const { registerFont } = require('canvas');
+        registerFont('./data/bahnschrift.ttf', { family: "Bahnschrift" });
+
         var canvas = Canvas.createCanvas(934, 282)
         const ctx = canvas.getContext('2d');
         let text = `${target.username}`;
