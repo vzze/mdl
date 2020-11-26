@@ -38,7 +38,7 @@ module.exports = {
                 .setColor('#ad26d1')
                 .setDescription(`A list of commands is below. Use \`${pref.prefix}help [command]\` for more detailed information on a command.`)
                 .addField('Setup', '`linkrole`,`removelinkedrole` \n', false)
-                .addField('General', '`help`, `leaderboard`, `level`, `global`, `addcard`, `cardavatar`, `removecard` \n', false)
+                .addField('General', '`help`, `leaderboard`, `level`, `global`, `addcard`, `cardavatar`, `removecard`, `invite` \n', false)
                 .setFooter(`Users gain 15-25 XP for a message sent every 30 seconds || vzze`);
             message.channel.send(helpembed);
         }
