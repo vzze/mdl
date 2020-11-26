@@ -10,7 +10,7 @@ module.exports = {
     async execute(client, message, args, users, ranks, Canvas, lvls) {
         const l4embed = new Discord.MessageEmbed()
             .setColor('#ad26d1')
-            .setDescription(`**To Invite me to your server [click here](https://discord.com/api/oauth2/authorize?client_id=776551374380204033&permissions=268520448&scope=bot)**`)
+            .setDescription(`To Invite me to your server [click here](https://discord.com/api/oauth2/authorize?client_id=776551374380204033&permissions=268520448&scope=bot)`)
         message.channel.send(l4embed);
     }
 }
