@@ -10,6 +10,10 @@ module.exports = {
     usage: `\`${pref}global\` \n \`${pref}global\` 5`,
     cooldown: 10,
     async execute(client, message, args, users, ranks, Canvas, lvls) {
+        function stringify(usern) {
+            let privateusern = usern.substring(0, usern.length - 5)
+            return privateusern;
+        }
         if(!args[0]) {
             try {
                 const u = await users.find();
@@ -21,7 +25,7 @@ module.exports = {
                         .setURL('https://discord.gg/mandem')
                         .addField('Top 10',
                             uarray.slice(0, 10)
-                                .map((user, position) => `**${position + 1}**. \`${user.user_name}\``)
+                                .map((user, position) => `**${position + 1}**. \`${stringify(user.user_name)}\``)
                                 .join('\n'), true
                         )
                         .addField('Level',
@@ -55,7 +59,7 @@ module.exports = {
                                 .setURL('https://discord.gg/mandem')
                                 .addField(`Top ${args[0]}`,
                                     uarray.slice(0, args[0])
-                                        .map((user, position) => `**${position + 1}**. \`${user.user_name}\``)
+                                        .map((user, position) => `**${position + 1}**. \`${stringify(user.user_name)}\``)
                                         .join('\n'), true
                                 )
                                 .addField('Level',
