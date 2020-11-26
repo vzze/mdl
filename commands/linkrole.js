@@ -8,6 +8,12 @@ module.exports = {
     usage: `\`${pref.prefix}linkrole\` <RoleID> <Level> \n \`${pref.prefix}linkrole\` 774601811428114432 5`,
     cooldown: 2,
     async execute(client, message, args, users, ranks, Canvas, lvls) {
+        if(!message.guild.member(client.user.id).hasPermission("MANAGE_ROLES")) {
+            const noelembed = new Discord.MessageEmbed()
+                .setColor('#dd4545')
+                .setDescription(`**I don\'t have permissions to manage roles.**`)
+            return message.channel.send(noelembed);
+        }
         let data = await ranks.findOne({ guild_id: message.guild.id, rank_id: 100 });
         if(!data) {
             for(var j = 100; j >= 1; j = j - 1) {

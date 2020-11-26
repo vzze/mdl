@@ -9,6 +9,12 @@ module.exports = {
     usage: `\`${pref.prefix}removelinkedrole <RoleID>\``,
     cooldown: 2,
     async execute(client, message, args, users, ranks, Canvas, lvls) {
+        if(!message.guild.member(client.user.id).hasPermission("MANAGE_ROLES")) {
+            const noelembed = new Discord.MessageEmbed()
+                .setColor('#dd4545')
+                .setDescription(`**I don\'t have permissions to manage roles.**`)
+           return message.channel.send(noelembed);
+        }
         const target = message.author;
         const member = message.guild.member(target);
         if(member.hasPermission("ADMINISTRATOR")) {
