@@ -17,7 +17,7 @@ module.exports = {
         }
         const target = message.author;
         const member = message.guild.member(target);
-        if(member.hasPermission("ADMINISTRATOR")) {
+        if(member.hasPermission("MANAGE_ROLES")) {
             if(args[0]) {
                 var ok = 1;
                 var query = { guild_id: message.guild.id, role_id: `${args[0]}`}
@@ -58,7 +58,7 @@ module.exports = {
         } else {
             const el3embed = new Discord.MessageEmbed()
                 .setColor('#dd4545')
-                .setDescription(`**Must be an Admin.**`)
+                .setDescription(`**You must be able to manage roles.**`)
             message.channel.send(el3embed);
         }
     }
