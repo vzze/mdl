@@ -14,8 +14,8 @@ module.exports = {
                 const commandhelpembed = new Discord.MessageEmbed()
                     .setColor('#ad26d1')
                     .setTitle(`Setup`)
-                    .addField('Order of commands', `\`${pref.prefix}createroletable\` 5 \n \`${pref.prefix}linkroletable\``, false)
-                    .addField('Tips', `After roles have been created and linked you \n can change the name of the roles.`, false)
+                    .addField('Linking Roles', `\`${pref.prefix}linkrole\` <RoleID> <Position>`, false)
+                    .addField('Remove Roles', `\`${pref.prefix}removelinkedrole\` <RoleID>`, false)
                 message.channel.send(commandhelpembed);
                 return;
             }
@@ -37,7 +37,7 @@ module.exports = {
             const helpembed = new Discord.MessageEmbed()
                 .setColor('#ad26d1')
                 .setDescription(`A list of commands is below. Use \`${pref.prefix}help [command]\` for more detailed information on a command.`)
-                .addField('Setup', '`createroletable`, `linkroletable`,`removeroletable` \n', false)
+                .addField('Setup', '`linkrole`,`removelinkedrole` \n', false)
                 .addField('General', '`help`, `leaderboard`, `level`, `global`, `addcard`, `cardavatar`, `removecard` \n', false)
                 .setFooter(`Users gain 15-25 XP for a message sent every 30 seconds || vzze`);
             message.channel.send(helpembed);
