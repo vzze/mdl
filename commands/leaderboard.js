@@ -53,6 +53,7 @@ module.exports = {
                         const leadembed = new Discord.MessageEmbed()
                                 .setColor('#ad26d1')
                                 .setTitle(`${message.guild.name} Leaderboard`)
+                                .setURL("https://discord.com/invite/FAARS2NdjE")
                                 .addField(`Top ${args[0]}`,
                                 localarray.slice(0, args[0])
                                         .map((user, position) => `**${position + 1}**. \`${user.user_name}\``)
