@@ -22,7 +22,6 @@ module.exports = {
                 const leadembed = new Discord.MessageEmbed()
                         .setColor('#ad26d1')
                         .setTitle(`Global Leaderboard`)
-                        .setURL('https://discord.gg/mandem')
                         .addField('Top 10',
                             uarray.slice(0, 10)
                                 .map((user, position) => `**${position + 1}**. \`${stringify(user.user_name)}\``)
@@ -56,7 +55,6 @@ module.exports = {
                         const leadembed = new Discord.MessageEmbed()
                                 .setColor('#ad26d1')
                                 .setTitle(`Global Leaderboard`)
-                                .setURL('https://discord.gg/mandem')
                                 .addField(`Top ${args[0]}`,
                                     uarray.slice(0, args[0])
                                         .map((user, position) => `**${position + 1}**. \`${stringify(user.user_name)}\``)
