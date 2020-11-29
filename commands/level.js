@@ -77,6 +77,14 @@ module.exports = {
         let string = target.tag.toString("utf-8");
         string = string.slice(-5);
 
+        ctx.beginPath();
+        ctx.arc(17, 17, 17, 1.5 * Math.PI, 5 * Math.PI);
+        ctx.arc(17, 265, 17, Math.PI, 4.5 * Math.PI);
+        ctx.arc(917, 265, 17, 0.5 * Math.PI, 4 * Math.PI);
+        ctx.arc(917, 17, 17, 0, 3.5 * Math.PI);
+        ctx.closePath();
+        ctx.clip();
+
         let imlink = customcard.rankcardlink;
         if(imlink!=0) {
             const specialbackground = await Canvas.loadImage(`${imlink}`)
@@ -183,7 +191,7 @@ module.exports = {
 
         }
 
-        const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'mandemcard.png');
+        const attachment = new Discord.MessageAttachment(canvas.toBuffer(), `${target.id}.png`);
 
         message.channel.send(attachment);
     }
