@@ -67,7 +67,11 @@ client.on('message', async message => {
                 rolecheck = r.role_id;
             }
             if(rolecheck!='0' && xp.get(message.author.id) > 0) {
+                try {
                 await message.member.roles.add(rolecheck);
+                } catch (e) {
+                    
+                }
             }
             if(await levelupchecker == 1 && xp.get(message.author.id) > 0) {
                 message.channel.send(`<@${message.author.id}> has advanced to level ${xp.get(message.author.id)}`);
