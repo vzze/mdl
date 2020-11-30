@@ -82,7 +82,7 @@ module.exports = {
                 } else {
                     const err3embed = new Discord.MessageEmbed()
                         .setColor('#dd4545')
-                        .setDescription(`**Must be inbetween 1 and 50.**`)
+                        .setDescription(`**Must be inbetween 1 and 30.**`)
                     message.channel.send(err3embed);
                 }
             } else {
