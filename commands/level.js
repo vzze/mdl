@@ -22,7 +22,6 @@ module.exports = {
                 rankavatar: 1
             });
             newU.save();
-            users.save();
             customcard = newU;
             setTimeout(() => {}, 3000);
         }

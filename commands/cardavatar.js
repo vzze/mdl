@@ -5,7 +5,7 @@ const pref = require('../config/config.json')
 module.exports = {
     name: 'cardavatar',
     description: 'Choose to display or to not display your avatar on the rank card.',
-    usage: `${pref.prefix}cardavatar`,
+    usage: `\`${pref.prefix}cardavatar\``,
     cooldown: 3,
     async execute(client, message, args, users, ranks, Canvas, lvls) {
         const u = await users.findOne({ user_id: message.author.id });

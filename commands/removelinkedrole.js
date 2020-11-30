@@ -6,7 +6,7 @@ const { execute } = require('../index');
 module.exports = {
     name: 'removelinkedrole',
     description: "Removes a linked role and deletes said role.",
-    usage: `\`${pref.prefix}removelinkedrole <RoleID>\``,
+    usage: `\`${pref.prefix}removelinkedrole\` <RoleID>`,
     cooldown: 2,
     async execute(client, message, args, users, ranks, Canvas, lvls) {
         if(!message.guild.member(client.user.id).hasPermission("MANAGE_ROLES")) {

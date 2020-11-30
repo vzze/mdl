@@ -62,13 +62,16 @@ client.on('message', async message => {
         levelupchecker = 0;
         addXP(message.author.id, getRandomXP(15, 25), message.author.tag).then(async () => {
             xp.set(message.author.id, await newlevel);
+            let r = await ranks.findOne({ guild_id: message.guild.id, rank_id: xp.get(message.author.id) });
+            let rolecheck = 0;
+            if(r) {
+                rolecheck = r.role_id;
+            }
+            if(rolecheck!='0' && xp.get(message.author.id) > 0) {
+                await message.member.roles.add(rolecheck);
+            }
             if(await levelupchecker == 1 && xp.get(message.author.id) > 0) {
-                const r = await ranks.findOne({ guild_id: message.guild.id, rank_id: xp.get(message.author.id) });
-                const rolecheck = r.role_id;
                 message.channel.send(`<@${message.author.id}> has advanced to level ${xp.get(message.author.id)}`);
-                if(rolecheck!='0') {
-                    await message.member.roles.add(rolecheck);
-                }
             }
         });
         xpcooldown.set(message.author.id);
