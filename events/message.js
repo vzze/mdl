@@ -16,21 +16,21 @@ let newlevel = 0;
 
 async function addXP(id, amount, name) {
     var query = { user_id: id }
-    try {   
-            const u = await users.findOne(query);
-            let newxp = u.xp + amount;
-            await u.updateOne({ xp: newxp });
-            await u.updateOne({ user_name: `${name}` });
-            newlevel = u.level;
-            if(newxp >= lvls.lvl[u.level] && u.level <= 99 && newxp >= 100) {
-                levelupchecker = 1;
-                newlevel = u.level + 1;
-                await u.updateOne({ level: newlevel});
-                await u.save();
-            } else {
-                await u.save();
-            }
-    } catch (e) {
+    const u = await users.findOne(query);
+    if(u!=undefined) {
+        let newxp = u.xp + amount;
+        await u.updateOne({ xp: newxp });
+        await u.updateOne({ user_name: `${name}` });
+        newlevel = u.level;
+        if(newxp >= lvls.lvl[u.level] && u.level <= 99 && newxp >= 100) {
+            levelupchecker = 1;
+            newlevel = u.level + 1;
+            await u.updateOne({ level: newlevel});
+            await u.save();
+        } else {
+            await u.save();
+        }
+    } else {
         const newU = new users({
             user_id: id, 
             xp: `${amount}`, 
@@ -40,8 +40,7 @@ async function addXP(id, amount, name) {
             rankavatar: 1
         });
         newU.save();
-    } 
-    
+    }
 }
 
 function getRandomXP(min, max) {
@@ -64,7 +63,7 @@ client.on('message', async message => {
             xp.set(message.author.id, await newlevel);
             let r = await ranks.findOne({ guild_id: message.guild.id, rank_id: xp.get(message.author.id) });
             let rolecheck = 0;
-            if(r) {
+            if(r!=undefined) {
                 rolecheck = r.role_id;
             }
             if(rolecheck!='0' && xp.get(message.author.id) > 0) {

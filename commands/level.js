@@ -12,7 +12,7 @@ module.exports = {
         const target = message.mentions.users.first() || message.author;
         const xpbar2 = await Canvas.loadImage('./data/levelcarddata/xpbar2.png');
         let customcard = await users.findOne({ user_id: target.id });
-        if(customcard==null) {
+        if(customcard==undefined) {
             const newU = new users({
                 user_id: target.id, 
                 xp: 0, 
