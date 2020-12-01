@@ -6,7 +6,9 @@ client.on('guildCreate', async guild => {
         const newGuild = new ranks({ guild_id: `${guild.id}`, rank_id: j, role_id: '0'});
         newGuild.save();
     }
-    client.user.setActivity(`${client.guilds.cache.size} guilds || .mhelp`, {
-        type: "WATCHING",
-    });
+    setTimeout( () => {
+        client.user.setActivity(`${client.guilds.cache.size} guilds || .mhelp`, {
+            type: "WATCHING",
+        });
+    }, 10000);
 });
