@@ -13,7 +13,7 @@ module.exports = {
             const noelembed = new Discord.MessageEmbed()
                 .setColor('#dd4545')
                 .setDescription(`**I don\'t have permissions to manage roles.**`)
-           return message.channel.send(noelembed);
+            return message.channel.send(noelembed);
         }
         const target = message.author;
         const member = message.guild.member(target);
@@ -27,8 +27,7 @@ module.exports = {
                         message.guild.roles.fetch(args[0]).then(async role => {
                             await role.delete();
                         })
-                        await r.updateOne({ role_id: `0`});
-                        await r.save();
+                        await r.deleteOne();
                     } else {
                         const elembed = new Discord.MessageEmbed()
                             .setColor('#dd4545')
@@ -38,8 +37,8 @@ module.exports = {
                     }
                 } catch (e) {
                     const elembed = new Discord.MessageEmbed()
-                    .setColor('#dd4545')
-                    .setDescription(`**Caught an error.**`)
+                        .setColor('#dd4545')
+                        .setDescription(`**Caught an error.**`)
                     message.channel.send(elembed);
                     ok = 0;
                 } 

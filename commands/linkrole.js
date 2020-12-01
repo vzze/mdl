@@ -14,15 +14,6 @@ module.exports = {
                 .setDescription(`**I don\'t have permissions to manage roles.**`)
             return message.channel.send(noelembed);
         }
-        let data = await ranks.findOne({ guild_id: message.guild.id, rank_id: 100 });
-        if(!data) {
-            for(var j = 100; j >= 1; j = j - 1) {
-                const newGuild = new ranks({ guild_id: `${guild.id}`, rank_id: j, role_id: '0'});
-                newGuild.save();
-            }
-            setTimeout(() => {}, 1000);
-            data = await ranks.findOne({ guild_id: message.guild.id, rank_id: 100 });
-        }
         const target = message.author;
         const member = message.guild.member(target);
         if(member.hasPermission("MANAGE_ROLES")) {
@@ -30,13 +21,15 @@ module.exports = {
                 if(args[1]) {
                     if(!isNaN(args[1]) && args[1] >= 1 && args[1] <= 100) {
                         var ok = 1;
-                        var query = { guild_id: message.guild.id, rank_id: args[1]}
                         try {
                             let roleadd  = await message.guild.roles.cache.get(`${args[0]}`);
                             if(roleadd) {
-                                const r = await ranks.findOne(query);
-                                await r.updateOne({ role_id: `${args[0]}`});
-                                await r.save();
+                                const newLinkedRole = new ranks({
+                                    guild_id: `${message.guild.id}`,
+                                    rank_id: args[1],
+                                    role_id: `${args[0]}`
+                                });
+                                newLinkedRole.save();
                             } else {
                                 const elembed = new Discord.MessageEmbed()
                                     .setColor('#dd4545')
@@ -46,8 +39,8 @@ module.exports = {
                             }
                         } catch (e) {
                             const elembed = new Discord.MessageEmbed()
-                            .setColor('#dd4545')
-                            .setDescription(`**Caught an error.**`)
+                                .setColor('#dd4545')
+                                .setDescription(`**Caught an error.**`)
                             message.channel.send(elembed);
                             ok = 0;
                        }

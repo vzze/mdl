@@ -7,5 +7,5 @@ client.on('guildDelete', async guild => {
         client.user.setActivity(`${client.guilds.cache.size} guilds || .mhelp`, {
             type: "WATCHING",
         });
-    }, 10000);
+    }, 30000);
 });
