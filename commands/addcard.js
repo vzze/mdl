@@ -9,6 +9,19 @@ module.exports = {
     cooldown: 5,
     async execute(client, message, args, users, ranks, Canvas, lvls) {
         const us = await users.findOne({ user_id: message.author.id });
+        if(us==undefined) {
+            const newU = new users({
+                user_id: message.author.id, 
+                xp: 0, 
+                level: 0, 
+                user_name: `${message.author.tag}`,
+                rankcardlink: 0,
+                rankavatar: 1
+            });
+            newU.save();
+            us = newU;
+            setTimeout(() => {}, 3000);
+        }
         if(us.level>=20) {
             if(args[0]) {
                 if(args[0].indexOf("imgur")!=-1) {

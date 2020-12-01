@@ -16,6 +16,7 @@ module.exports = {
                     .setTitle(`Setup`)
                     .addField('Linking Roles', `\`${pref.prefix}linkrole\` <RoleID> <Position>`, false)
                     .addField('Remove Roles', `\`${pref.prefix}removelinkedrole\` <RoleID>`, false)
+                    .addField('Important', 'Please do mind that the bot has to be above the level roles.', false)
                 message.channel.send(commandhelpembed);
                 return;
             }

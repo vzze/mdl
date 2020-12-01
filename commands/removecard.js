@@ -8,8 +8,20 @@ module.exports = {
     usage: `\`${pref.prefix}removecard\``,
     cooldown: 3,
     async execute(client, message, args, users, ranks, Canvas, lvls) {
-
         const u = await users.findOne({ user_id: message.author.id });
+        if(u==undefined) {
+            const newU = new users({
+                user_id: message.author.id, 
+                xp: 0, 
+                level: 0, 
+                user_name: `${message.author.tag}`,
+                rankcardlink: 0,
+                rankavatar: 1
+            });
+            newU.save();
+            u = newU;
+            setTimeout(() => {}, 3000);
+        }
         if(u.rankcardlink!='0') {
             var ok = 1;
             try {

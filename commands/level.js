@@ -9,6 +9,12 @@ module.exports = {
     usage: `\`${pref}level\` \n \`${pref}level\` <User>`,
     cooldown: 1,
     async execute(client, message, args, users, ranks, Canvas, lvls) {
+        if(!message.guild.member(client.user.id).hasPermission("ATTACH_FILES")) {
+            const noelembed = new Discord.MessageEmbed()
+                .setColor('#dd4545')
+                .setDescription(`**I don\'t have permissions to send images.**`)
+           return message.channel.send(noelembed);
+        }
         const target = message.mentions.users.first() || message.author;
         const xpbar2 = await Canvas.loadImage('./data/levelcarddata/xpbar2.png');
         let customcard = await users.findOne({ user_id: target.id });

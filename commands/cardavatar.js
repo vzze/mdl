@@ -10,6 +10,19 @@ module.exports = {
     async execute(client, message, args, users, ranks, Canvas, lvls) {
         const u = await users.findOne({ user_id: message.author.id });
         var ok = 1;
+        if(u==undefined) {
+            const newU = new users({
+                user_id: message.author.id, 
+                xp: 0, 
+                level: 0, 
+                user_name: `${message.author.tag}`,
+                rankcardlink: 0,
+                rankavatar: 1
+            });
+            newU.save();
+            u = newU;
+            setTimeout(() => {}, 3000);
+        }
         switch(u.rankavatar) {
             case 1:
                 try {
