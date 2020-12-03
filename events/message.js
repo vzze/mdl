@@ -40,6 +40,7 @@ async function addXP(id, amount, name) {
             rankavatar: 1
         });
         newU.save();
+        newlevel = 0;
     }
 }
 
@@ -59,6 +60,7 @@ client.on('message', async message => {
             return;
         }
         levelupchecker = 0;
+        newlevel = 0;
         addXP(message.author.id, getRandomXP(15, 25), message.author.tag).then(async () => {
             xp.set(message.author.id, await newlevel);
             let r = await ranks.findOne({ guild_id: message.guild.id, rank_id: xp.get(message.author.id) });
