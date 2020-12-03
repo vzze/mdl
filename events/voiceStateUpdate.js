@@ -8,11 +8,12 @@ const ranks = require("../data/ranks");
 client.on("voiceStateUpdate", VoiceState => {
     if(VoiceState.member.user.bot) return;
     if(VCXP.has(VoiceState.member.id)) return;
+    if(VoiceState.member.voice.channelID == null) return;
     VCXP.set(VoiceState.member.id);
     var xpval = setInterval(() => {
         if(VoiceState.member.voice.channelID == null) {
-            clearInterval(xpval);
             VCXP.delete(VoiceState.member.id);
+            clearInterval(xpval);
         } else {
             if(VoiceState.member.voice.serverMute == true || VoiceState.member.voice.selfMute == true) {
 
