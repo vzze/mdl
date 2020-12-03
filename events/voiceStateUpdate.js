@@ -30,16 +30,6 @@ client.on("voiceStateUpdate", VoiceState => {
 
                         }
                     }
-                    if(await levelupchecker == 1 && await newlevel > 0) {
-                        let generalchat = VoiceState.guild.channels.cache.find(channel => channel.name == "general");
-                        if(generalchat) {
-                            generalchat.send(`<@${VoiceState.member.id}> has advanced to level ${await newlevel}`);
-                        } else {
-                            let nogeneralchat = VoiceState.guild.channels.cache.filter(channel => channel.type == 'text');
-                            let nogen = nogeneralchat.first();
-                            nogen.send(`<@${VoiceState.member.id}> has advanced to level ${await newlevel}`);
-                        }
-                    }
                 })
             }
         }
