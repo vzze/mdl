@@ -8,7 +8,7 @@ module.exports = {
     description: 'Lists all the commands or info about a specific command.',
     usage: `\`${pref.prefix}help\` \n \`${pref.prefix}help\` [command]`,
     cooldown: 1,
-    async execute(client, message, args, users, ranks, Canvas, lvls) {
+    async execute(client, message, args) {
         if(args[0]) {
             if(args[0].toLowerCase()=="setup") {
                 const commandhelpembed = new Discord.MessageEmbed()
@@ -40,8 +40,10 @@ module.exports = {
                 .setAuthor(`${message.client.user.username}`, `${message.client.user.displayAvatarURL()}`)
                 .setDescription(`A list of commands is below. Use \`${pref.prefix}help [command]\` for more detailed information on a command.`)
                 .addField('Setup', '`linkrole`,`removelinkedrole` \n', false)
-                .addField('General', '`help`, `leaderboard`, `level`, `global`, `addcard`, `cardavatar`, `removecard`, `invite`, `stats`, `support`, `upvote` \n', false)
-                .setFooter(`Users gain 15-25 XP for a message sent every 30 seconds || vzze`);
+                .addField('General', '`help`, `invite`, `stats`, `support`, `upvote` \n', false)
+                .addField('Customization', '`addcard`, `cardavatar`, `removecard`')
+                .addField('Levelling', '`leaderboard`, `level`, `global`', false)
+                .setFooter(`Users receive 15-25 XP whilst being in a voice channel & per message sent every 30 seconds.`);
             message.channel.send(helpembed);
         }
     }

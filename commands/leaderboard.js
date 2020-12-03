@@ -2,13 +2,14 @@ const { DiscordAPIError } = require("discord.js")
 const Discord = require(`discord.js`);
 const config = require('../config/config.json')
 const pref = config.prefix;
+const users = require('../data/users');
 
 module.exports = {
 	name: 'leaderboard',
 	description: 'Displays the local leaderboard.',
     usage: `\`${pref}leaderboard\` \n \`${pref}leaderboard\` 5`,
     cooldown: 4,
-    async execute(client, message, args, users, ranks, Canvas, lvls) {
+    async execute(client, message, args) {
         if(!args[0]) {
             try {
                 const u = await users.find();

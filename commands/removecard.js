@@ -1,13 +1,14 @@
 const { DiscordAPIError } = require("discord.js")
 const Discord = require(`discord.js`);
 const pref = require('../config/config.json')
+const users = require('../data/users');
 
 module.exports = {
     name: 'removecard',
     description: "Removes your custom card and reverts to the original one.",
     usage: `\`${pref.prefix}removecard\``,
     cooldown: 3,
-    async execute(client, message, args, users, ranks, Canvas, lvls) {
+    async execute(client, message, args) {
         const u = await users.findOne({ user_id: message.author.id });
         if(u==undefined) {
             const newU = new users({

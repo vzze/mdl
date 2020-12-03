@@ -1,13 +1,14 @@
 const Discord = require(`discord.js`);
 const pref = require('../config/config.json')
 const deepai = require('deepai');
+const users = require('../data/users');
 
 module.exports = {
     name: 'addcard',
     description: "Adds a custom rank card for users above level 20. \n Suggested resolution is 934x282",
     usage: `\`${pref.prefix}addcard\` <Imgur link> \n \`${pref.prefix}addcard\` <Imgur link>`,
     cooldown: 5,
-    async execute(client, message, args, users, ranks, Canvas, lvls) {
+    async execute(client, message, args) {
         const us = await users.findOne({ user_id: message.author.id });
         if(us==undefined) {
             const newU = new users({

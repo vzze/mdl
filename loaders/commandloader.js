@@ -9,9 +9,9 @@ module.exports = (client) => {
         if(commandFiles.length <= 0) return console.log("No commands to load.");
         commandFiles.forEach((f) => {
             const command = require(`../commands/${f}`);
-            console.log(`Loaded ${command.name}`);
+          //  console.log(`Loaded ${command.name}`);
             client.commands.set(command.name, command);
         });
-        console.log("-------------");
+     //   console.log("-------------");
     });
 }

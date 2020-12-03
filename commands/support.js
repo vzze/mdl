@@ -7,7 +7,7 @@ module.exports = {
     description: 'Sends a message with a hyper link to join the bots support server.',
     usage: `\`${pref}support\``,
     cooldown: 1,
-    async execute(client, message, args, users, ranks, Canvas, lvls) {
+    async execute(client, message, args) {
         const l4embed = new Discord.MessageEmbed()
             .setColor('#ad26d1')
             .setAuthor(`Support Server`, `${message.client.user.displayAvatarURL()}`)

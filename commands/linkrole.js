@@ -1,13 +1,14 @@
 const { DiscordAPIError } = require("discord.js")
 const Discord = require(`discord.js`);
 const pref = require('../config/config.json');
+const ranks = require("../data/ranks");
 
 module.exports = {
     name: 'linkrole',
     description: "Links a role.",
     usage: `\`${pref.prefix}linkrole\` <RoleID> <Level> \n \`${pref.prefix}linkrole\` 774601811428114432 5`,
     cooldown: 2,
-    async execute(client, message, args, users, ranks, Canvas, lvls) {
+    async execute(client, message, args) {
         if(!message.guild.member(client.user.id).hasPermission("MANAGE_ROLES")) {
             const noelembed = new Discord.MessageEmbed()
                 .setColor('#dd4545')

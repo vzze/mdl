@@ -2,13 +2,16 @@ const { DiscordAPIError } = require("discord.js")
 const Discord = require(`discord.js`);
 const config = require('../config/config.json')
 const pref = config.prefix;
+const users = require('../data/users');
+const lvls = require('../config/levels.json');
+const Canvas = require("canvas");
 
 module.exports = {
 	name: 'level',
 	description: 'Shows a users level.',
     usage: `\`${pref}level\` \n \`${pref}level\` <User>`,
     cooldown: 1,
-    async execute(client, message, args, users, ranks, Canvas, lvls) {
+    async execute(client, message, args) {
         if(!message.guild.member(client.user.id).hasPermission("ATTACH_FILES")) {
             const noelembed = new Discord.MessageEmbed()
                 .setColor('#dd4545')

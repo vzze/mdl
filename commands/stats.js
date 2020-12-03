@@ -7,7 +7,7 @@ module.exports = {
     description: `Displays the stats of the bot`,
     usage: `\`${pref.prefix}stats\``,
     cooldown: '2',
-    async execute(client, message, args, users, ranks, Canvas, lvls) {
+    async execute(client, message, args) {
         let seconds = Math.floor(process.uptime());
         let minutes = Math.floor(seconds / 60);
         let hours = Math.floor(minutes / 60);

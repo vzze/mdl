@@ -1,13 +1,14 @@
 const { DiscordAPIError } = require("discord.js")
 const Discord = require(`discord.js`);
 const pref = require('../config/config.json')
+const users = require('../data/users');
 
 module.exports = {
     name: 'cardavatar',
     description: 'Choose to display or to not display your avatar on the rank card.',
     usage: `\`${pref.prefix}cardavatar\``,
     cooldown: 3,
-    async execute(client, message, args, users, ranks, Canvas, lvls) {
+    async execute(client, message, args) {
         const u = await users.findOne({ user_id: message.author.id });
         var ok = 1;
         if(u==undefined) {

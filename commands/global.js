@@ -1,7 +1,7 @@
 const { DiscordAPIError } = require("discord.js")
 const Discord = require(`discord.js`);
 const config = require('../config/config.json')
-
+const users = require('../data/users');
 const pref = config.prefix;
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
 	description: 'Displays the global leaderboard.',
     usage: `\`${pref}global\` \n \`${pref}global\` 5`,
     cooldown: 10,
-    async execute(client, message, args, users, ranks, Canvas, lvls) {
+    async execute(client, message, args) {
         function stringify(usern) {
             let privateusern = usern.substring(0, usern.length - 5)
             return privateusern;

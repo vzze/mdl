@@ -2,13 +2,14 @@ const { DiscordAPIError } = require("discord.js")
 const Discord = require(`discord.js`);
 const pref = require('../config/config.json');
 const { execute } = require('../index');
+const ranks = require('../data/ranks');
 
 module.exports = {
     name: 'removelinkedrole',
     description: "Removes a linked role and deletes said role.",
     usage: `\`${pref.prefix}removelinkedrole\` <RoleID>`,
     cooldown: 2,
-    async execute(client, message, args, users, ranks, Canvas, lvls) {
+    async execute(client, message, args) {
         if(!message.guild.member(client.user.id).hasPermission("MANAGE_ROLES")) {
             const noelembed = new Discord.MessageEmbed()
                 .setColor('#dd4545')

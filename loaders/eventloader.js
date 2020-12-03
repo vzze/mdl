@@ -7,8 +7,8 @@ module.exports = () => {
         if(eventFiles.length <= 0) return console.log("No events to load.");
         eventFiles.forEach((f) => {
             require(`../events/${f}`);
-            console.log(`Loaded ${f}`)
+        //    console.log(`Loaded ${f}`)
         });
-        console.log("-------------");
+    //    console.log("-------------");
     });
 }
