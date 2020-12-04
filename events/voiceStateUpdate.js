@@ -19,7 +19,6 @@ client.on("voiceStateUpdate", VoiceState => {
 
             } else {
                 addXP(VoiceState.member.id, getRandomXP(1, 15), VoiceState.member.user.tag, 0, 0).then(async val => {
-                    console.log(val);
                     let r = await ranks.findOne({ guild_id: VoiceState.guild.id, rank_id: val[1]});
                     let rolecheck = 0;
                     if(r!=undefined) {
