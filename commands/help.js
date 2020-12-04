@@ -43,7 +43,7 @@ module.exports = {
                 .addField('General', '`help`, `invite`, `stats`, `support`, `upvote` \n', false)
                 .addField('Customization', '`addcard`, `cardavatar`, `removecard`')
                 .addField('Levelling', '`leaderboard`, `level`, `global`', false)
-                .setFooter(`Users receive 15-25 XP whilst being in a voice channel & per message sent every 30 seconds.`);
+                .setFooter(`Users receive 1-15 XP whilst being in a voice channel & 15-25 XP per message sent every 30 seconds.`);
             message.channel.send(helpembed);
         }
     }

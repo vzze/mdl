@@ -31,7 +31,11 @@ client.on('message', async message => {
                 }
             }
             if(await levelupchecker == 1 && await newlevel > 0) {
-                message.channel.send(`<@${message.author.id}> has advanced to level ${await newlevel}`);
+                try {
+                    message.channel.send(`<@${message.author.id}> has advanced to level ${await newlevel}`);
+                } catch (e) {
+                    
+                }
             }
         });
         xpcooldown.set(message.author.id);
