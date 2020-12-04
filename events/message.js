@@ -16,28 +16,27 @@ client.on('message', async message => {
         if(xpcooldown.has(message.author.id)) {
             return;
         }
-        addXP(message.author.id, getRandomXP(15, 25), message.author.tag, 0, 0).then(async () => {
-            xpcooldown.set(message.author.id);
-            let r = await ranks.findOne({ guild_id: message.guild.id, rank_id: await newlevel });
+        addXP(message.author.id, getRandomXP(15, 25), message.author.tag, 0, 0).then( async val => {
+            let r = await ranks.findOne({ guild_id: message.guild.id, rank_id: val[1] });
             let rolecheck = 0;
             if(r!=undefined) {
                 rolecheck = r.role_id;
             }
-            if(rolecheck!='0' && await newlevel > 0) {
+            if(rolecheck!='0' && val[1] > 0) {
                 try {
                     await message.member.roles.add(rolecheck);
                 } catch (e) {
                     
                 }
             }
-            if(await levelupchecker == 1 && await newlevel > 0) {
+            if(val[0] == 1 && val[1] > 0) {
                 try {
-                    message.channel.send(`<@${message.author.id}> has advanced to level ${await newlevel}`);
+                    message.channel.send(`<@${message.author.id}> has advanced to level ${val[1]}`);
                 } catch (e) {
                     
                 }
             }
-        });
+        })
         xpcooldown.set(message.author.id);
         setTimeout(() => xpcooldown.delete(message.author.id), 30000)
     }

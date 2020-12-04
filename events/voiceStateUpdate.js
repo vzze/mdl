@@ -18,17 +18,18 @@ client.on("voiceStateUpdate", VoiceState => {
             if(VoiceState.member.voice.serverMute == true || VoiceState.member.voice.selfMute == true) {
 
             } else {
-                addXP(VoiceState.member.id, getRandomXP(1, 15), VoiceState.member.user.tag, 0, 0).then(async () => {
-                    let r = await ranks.findOne({ guild_id: VoiceState.guild.id, rank_id: await newlevel});
+                addXP(VoiceState.member.id, getRandomXP(1, 15), VoiceState.member.user.tag, 0, 0).then(async val => {
+                    console.log(val);
+                    let r = await ranks.findOne({ guild_id: VoiceState.guild.id, rank_id: val[1]});
                     let rolecheck = 0;
                     if(r!=undefined) {
                         rolecheck = r.role_id;
                     }
-                    if(rolecheck!='0' && await newlevel > 0) {
+                    if(rolecheck!='0' && val[1] > 0) {
                         try {
                             await VoiceState.member.roles.add(rolecheck);
                         } catch (e) {
-
+                            
                         }
                     }
                 })

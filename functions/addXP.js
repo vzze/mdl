@@ -2,8 +2,8 @@ const users = require('../data/users');
 const lvls = require('../config/levels.json');
 
 module.exports = async (id, amount, name, checker, newlvl) => {
-    levelupchecker = checker
-    newlevel = newlvl;
+    let levelupchecker = 0;
+    let newlevel = 0;
     var query = { user_id: id }
     const u = await users.findOne(query);
     if(u!=undefined) {
@@ -16,10 +16,12 @@ module.exports = async (id, amount, name, checker, newlvl) => {
             newlevel = u.level + 1;
             await u.updateOne({ level: newlevel});
             await u.save();
-            return newlevel, levelupchecker;
+            let a = [levelupchecker, newlevel];
+            return a;
         } else {
             await u.save();
-            return newlevel, levelupchecker;
+            let a = [levelupchecker, newlevel];
+            return a;
         }
     } else {
         const newU = new users({
@@ -31,6 +33,7 @@ module.exports = async (id, amount, name, checker, newlvl) => {
             rankavatar: 1
         });
         newU.save();
-        return newlevel, levelupchecker;
+        let a = [levelupchecker, newlevel];
+        return a;
     }
 }
