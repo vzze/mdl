@@ -11,8 +11,6 @@ const user = new Schema({
     rankavatar: { type: Number, unique: false, default: 1 }
 });
 
-user.index({ _id: 1 }, { sparse: true });
-
 const users = mongoose.model('users', user)
 
 module.exports = users;

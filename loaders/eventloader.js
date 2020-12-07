@@ -1,14 +1,10 @@
 const fs = require("fs")
 
-module.exports = () => {
-    fs.readdir('./events/', (err, files) => {
-        if(err) console.error(err);
-        let eventFiles = files.filter(file => file.endsWith('.js'));
-        if(eventFiles.length <= 0) return console.log("No events to load.");
-        eventFiles.forEach((f) => {
-            require(`../events/${f}`);
-        //    console.log(`Loaded ${f}`)
-        });
-    //    console.log("-------------");
-    });
+module.exports.exec = (client) => {
+    for(const f of fs.readdirSync('./events/').filter(file => file.endsWith('.js'))) {
+        const event = require(`../events/${f}`);
+        const eventN = f.split(".").shift();
+        client.on(eventN, event.bind(null, client));
+    }
+        
 }

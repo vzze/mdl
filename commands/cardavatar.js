@@ -1,5 +1,4 @@
-const { DiscordAPIError } = require("discord.js")
-const Discord = require(`discord.js`);
+const { MessageEmbed, DiscordAPIError } = require(`discord.js`);
 const pref = require('../config/config.json')
 const users = require('../data/users');
 
@@ -31,13 +30,13 @@ module.exports = {
                     await u.save();
                 } catch (e) {
                     ok = 0;
-                    const ad3dembed = new Discord.MessageEmbed()
+                    const ad3dembed = new MessageEmbed()
                         .setColor('#dd4545')
                         .setDescription(`**Caught an error.**`)
                     message.channel.send(ad3dembed);
                 }
                 if(ok==1) {
-                    const l3embed = new Discord.MessageEmbed()
+                    const l3embed = new MessageEmbed()
                         .setColor('#ad26d1')
                         .setDescription(`**Successfully updated your card avatar to invisible.**`)
                     message.channel.send(l3embed); 
@@ -49,13 +48,13 @@ module.exports = {
                     await u.save();
                 } catch (e) {
                     ok = 0;
-                    const ad3dembed = new Discord.MessageEmbed()
+                    const ad3dembed = new MessageEmbed()
                         .setColor('#dd4545')
                         .setDescription(`**Caught an error.**`)
                     message.channel.send(ad3dembed);
                 }
                 if(ok==1) {
-                    const l3embed = new Discord.MessageEmbed()
+                    const l3embed = new MessageEmbed()
                         .setColor('#ad26d1')
                         .setDescription(`**Successfully updated your card avatar to visible.**`)
                     message.channel.send(l3embed); 

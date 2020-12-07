@@ -1,5 +1,4 @@
-const { DiscordAPIError } = require("discord.js")
-const Discord = require(`discord.js`);
+const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
 const pref = require('../config/config.json')
 const users = require('../data/users');
 
@@ -30,19 +29,19 @@ module.exports = {
             await u.save();
             } catch (e) {
                 ok = 0;
-                const l2embed = new Discord.MessageEmbed()
+                const l2embed = new MessageEmbed()
                     .setColor('#dd4545')
                     .setDescription(`**Caught an error.**`)
                 message.channel.send(l2embed);
             }
             if(ok==1) {
-                const l3embed = new Discord.MessageEmbed()
+                const l3embed = new MessageEmbed()
                     .setColor('#ad26d1')
                     .setDescription(`**Succesfully removed your rank card.**`);
                 message.channel.send(l3embed);
             }
         } else {
-            const l3embed = new Discord.MessageEmbed()
+            const l3embed = new MessageEmbed()
                 .setColor('#dd4545')
                 .setDescription(`**You don\'t have a rank card in the first place.**`)
             message.channel.send(l3embed);

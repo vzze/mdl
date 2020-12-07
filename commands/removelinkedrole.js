@@ -1,17 +1,15 @@
-const { DiscordAPIError } = require("discord.js")
-const Discord = require(`discord.js`);
+const { MessageEmbed, DiscordAPIError } = require(`discord.js`);
 const pref = require('../config/config.json');
-const { execute } = require('../index');
 const ranks = require('../data/ranks');
 
 module.exports = {
     name: 'removelinkedrole',
     description: "Removes a linked role and deletes said role.",
     usage: `\`${pref.prefix}removelinkedrole\` <RoleID>`,
-    cooldown: 2,
+    cooldown: 3,
     async execute(client, message, args) {
         if(!message.guild.member(client.user.id).hasPermission("MANAGE_ROLES")) {
-            const noelembed = new Discord.MessageEmbed()
+            const noelembed = new MessageEmbed()
                 .setColor('#dd4545')
                 .setDescription(`**I don\'t have permissions to manage roles.**`)
             return message.channel.send(noelembed);
@@ -30,33 +28,33 @@ module.exports = {
                         })
                         await r.deleteOne();
                     } else {
-                        const elembed = new Discord.MessageEmbed()
+                        const elembed = new MessageEmbed()
                             .setColor('#dd4545')
                             .setDescription(`**Chosen role is not linked in the first place.**`)
                         message.channel.send(elembed);
                         ok = 0;
                     }
                 } catch (e) {
-                    const elembed = new Discord.MessageEmbed()
+                    const elembed = new MessageEmbed()
                         .setColor('#dd4545')
                         .setDescription(`**Caught an error.**`)
                     message.channel.send(elembed);
                     ok = 0;
                 } 
                 if(ok==1) {
-                    const el2embed = new Discord.MessageEmbed()
+                    const el2embed = new MessageEmbed()
                         .setColor('#ad26d1')
                         .setDescription(`**Removed role successfully.**`)
                     message.channel.send(el2embed);
                 }
             } else {
-                const el3embed = new Discord.MessageEmbed()
+                const el3embed = new MessageEmbed()
                     .setColor('#dd4545')
                     .setDescription(`**Must mention the role ID.**`)
                 message.channel.send(el3embed);
             }
         } else {
-            const el3embed = new Discord.MessageEmbed()
+            const el3embed = new MessageEmbed()
                 .setColor('#dd4545')
                 .setDescription(`**You must be able to manage roles.**`)
             message.channel.send(el3embed);

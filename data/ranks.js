@@ -8,8 +8,6 @@ const rank = new Schema({
     role_id: { type: String, unique: false, default: 0 }
 })
 
-rank.index({ _id: 1 }, { sparse: true });
-
 const ranks = mongoose.model('ranks', rank);
 
 module.exports = ranks;

@@ -1,24 +1,43 @@
-const { Client} = require(`discord.js`);
-const client = new Client({
-  //  shardCount: shards
+const Discord = require("discord.js");
+const { token } = require("./config/config.json");
+
+const manager = new Discord.ShardingManager('./bot.js', {
+    token: token,
+    respawn: true,
 });
-const config = require("./config/config.json")
 
-/*
-client.on("shardError", err => console.log(err));
-client.on("shardReady", r => console.log(`[CLIENT SIDE] Shard #${client.shard.ids} is ready`));
-client.on("shardDisconnect", r => console.log(`[CLIENT SIDE] Shard #${client.shard.ids} disconnected`));
-client.on("shardReconnecting", t => console.log(`[CLIENT SIDE] Shard #${client.shard.ids} is reconnecting`));
-client.on("shardResume", t => console.log(`[CLIENT SIDE] Shard #${client.shard.ids} resumed`));
-*/
+manager.on("shardCreate", shard => {
+    console.log(`Created Shard ${shard.id}`)
+    shard.on("message", message => {
+        console.log(`Shard ${shard.id} : ${message._fetchProp || message._eval} : ${message._result}`);
+    });
 
-require("./loaders/eventloader")();
-require("./loaders/commandloader")(client);
-require("./loaders/dbloader");
+    shard.on("disconnect", () => {
+        console.log(`Shard ${shard.id} disconnected`);
+    })
 
-module.exports = {
-    client: client,
-    clientcmds: client.commands
-}
+    shard.on("reconnecting", () => {
+        console.log(`Shard ${shard.id} is reconnecting`);
+    })
 
-client.login(config.token);
+    shard.on("error", () => {
+        shard.respawn();
+    })
+
+    shard.on("ready", () => {
+        console.log(`Shard ${shard.id} is ready`);
+    })
+
+    shard.on("spawn", () => {
+        console.log(`Shard ${shard.id} spawned`);
+    })
+
+    shard.on("death", () => {
+        console.log(`Shard ${shard.id} died`);
+    })
+});
+
+manager.spawn("auto");
+
+
+

@@ -1,5 +1,4 @@
-const { DiscordAPIError } = require("discord.js")
-const Discord = require(`discord.js`);
+const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
 const config = require('../config/config.json')
 const pref = config.prefix;
 const users = require('../data/users');
@@ -16,7 +15,7 @@ module.exports = {
                 u.sort((a, b) => b.xp - a.xp)
                 const uarray = Array.from(u);
                 const localarray = uarray.filter(u => message.guild.members.cache.has(u.user_id));
-                const leadembed = new Discord.MessageEmbed()
+                const leadembed = new MessageEmbed()
                         .setColor('#ad26d1')
                         .setTitle(`${message.guild.name} Leaderboard`)
                         .setURL("https://discord.com/invite/FAARS2NdjE")
@@ -37,7 +36,7 @@ module.exports = {
                         )
                     message.channel.send(leadembed)
             } catch (e) {
-                const err3embed = new Discord.MessageEmbed()
+                const err3embed = new MessageEmbed()
                     .setColor('#dd4545')
                     .setDescription(`**No users have talked for a leaderboard to be generated.**`)
                 message.channel.send(err3embed);
@@ -51,7 +50,7 @@ module.exports = {
                         u.sort((a, b) => b.xp - a.xp)
                         const uarray = Array.from(u);
                         const localarray = uarray.filter(u => message.guild.members.cache.has(u.user_id));
-                        const leadembed = new Discord.MessageEmbed()
+                        const leadembed = new MessageEmbed()
                                 .setColor('#ad26d1')
                                 .setTitle(`${message.guild.name} Leaderboard`)
                                 .setURL("https://discord.com/invite/FAARS2NdjE")

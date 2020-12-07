@@ -1,11 +1,10 @@
-const { client } = require("../index");
 const { Collection } = require("discord.js");
 const getRandomXP = require("../functions/getRandomXP");
 const addXP = require("../functions/addXP");
 const VCXP = new Collection;
 const ranks = require("../data/ranks");
 
-client.on("voiceStateUpdate", VoiceState => {
+module.exports = (client, VoiceState) => {
     if(VoiceState.member.user.bot) return;
     if(VCXP.has(VoiceState.member.id)) return;
     if(VoiceState.member.voice.channelID == null) return;
@@ -35,4 +34,4 @@ client.on("voiceStateUpdate", VoiceState => {
             }
         }
     }, 30000)
-});
+}

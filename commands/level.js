@@ -1,5 +1,4 @@
-const { DiscordAPIError } = require("discord.js")
-const Discord = require(`discord.js`);
+const { MessageEmbed, MessageAttachment, DiscordAPIError } = require(`discord.js`);
 const config = require('../config/config.json')
 const pref = config.prefix;
 const users = require('../data/users');
@@ -10,10 +9,10 @@ module.exports = {
 	name: 'level',
 	description: 'Shows a users level.',
     usage: `\`${pref}level\` \n \`${pref}level\` <User>`,
-    cooldown: 1,
+    cooldown: 3,
     async execute(client, message, args) {
         if(!message.guild.member(client.user.id).hasPermission("ATTACH_FILES")) {
-            const noelembed = new Discord.MessageEmbed()
+            const noelembed = new MessageEmbed()
                 .setColor('#dd4545')
                 .setDescription(`**I don\'t have permissions to send images.**`)
            return message.channel.send(noelembed);
@@ -102,7 +101,6 @@ module.exports = {
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
         }
 
-
         var fontsize = 47;
         do {
             fontsize = fontsize - 1;
@@ -139,6 +137,7 @@ module.exports = {
         ctx.font = '20px Bahnschrift';
         ctx.fillStyle = '#ffffff';
         ctx.fillText(`RANK`, 790, 50);
+
         if(z==-1) {
             ctx.font = '40px Bahnschrift';
             ctx.fillStyle = '#ffffff';
@@ -167,7 +166,7 @@ module.exports = {
         } else {
 
         }
-
+  
         ctx.drawImage(xpbar2, 0, 0, canvas.width, canvas.height);
 
         ctx.beginPath();
@@ -177,7 +176,7 @@ module.exports = {
         ctx.arc(276, 202, 17, Math.PI, 180);   
         ctx.closePath();
         ctx.clip();
-        
+
         var gradient = ctx.createLinearGradient(258, 0, 890, 0);
         if(bigcheck==1) {
         gradient.addColorStop(percentage-0.05,'#C069FF')
@@ -199,8 +198,9 @@ module.exports = {
 
         }
 
-        const attachment = new Discord.MessageAttachment(canvas.toBuffer(), `${target.id}.png`);
+        const attachment = new MessageAttachment(canvas.toBuffer(), `${target.id}.png`);
 
         message.channel.send(attachment);
     }
+
 }

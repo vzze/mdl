@@ -1,5 +1,4 @@
-const { DiscordAPIError } = require("discord.js")
-const Discord = require(`discord.js`);
+const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
 const config = require('../config/config.json')
 const users = require('../data/users');
 const pref = config.prefix;
@@ -19,7 +18,7 @@ module.exports = {
                 const u = await users.find();
                 u.sort((a, b) => b.xp - a.xp)
                 const uarray = Array.from(u);
-                const leadembed = new Discord.MessageEmbed()
+                const leadembed = new MessageEmbed()
                         .setColor('#ad26d1')
                         .setTitle(`Global Leaderboard`)
                         .setURL("https://discord.com/invite/FAARS2NdjE")
@@ -40,7 +39,7 @@ module.exports = {
                         )
                     message.channel.send(leadembed)
             } catch (e) {
-                const err3embed = new Discord.MessageEmbed()
+                const err3embed = new MessageEmbed()
                     .setColor('#dd4545')
                     .setDescription(`**No users have talked for a leaderboard to be generated.**`)
                 message.channel.send(err3embed);
@@ -53,7 +52,7 @@ module.exports = {
                         const u = await users.find();
                         u.sort((a, b) => b.xp - a.xp)
                         const uarray = Array.from(u);
-                        const leadembed = new Discord.MessageEmbed()
+                        const leadembed = new MessageEmbed()
                                 .setColor('#ad26d1')
                                 .setTitle(`Global Leaderboard`)
                                 .setURL("https://discord.com/invite/FAARS2NdjE")
@@ -74,19 +73,19 @@ module.exports = {
                                 )
                             message.channel.send(leadembed)
                     } catch (e) {
-                        const err3embed = new Discord.MessageEmbed()
+                        const err3embed = new MessageEmbed()
                             .setColor('#dd4545')
                             .setDescription(`**No users have talked for a leaderboard to be generated.**`)
                         message.channel.send(err3embed);
                     }
                 } else {
-                    const err3embed = new Discord.MessageEmbed()
+                    const err3embed = new MessageEmbed()
                         .setColor('#dd4545')
                         .setDescription(`**Must be inbetween 1 and 30.**`)
                     message.channel.send(err3embed);
                 }
             } else {
-                const err2embed = new Discord.MessageEmbed()
+                const err2embed = new MessageEmbed()
                     .setColor('#dd4545')
                     .setDescription(`**Must be a number**`)
                 message.channel.send(err2embed);

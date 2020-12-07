@@ -1,5 +1,4 @@
-const { DiscordAPIError } = require("discord.js")
-const Discord = require(`discord.js`);
+const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
 const pref = require('../config/config.json')
 
 
@@ -7,11 +6,11 @@ module.exports = {
     name: 'help',
     description: 'Lists all the commands or info about a specific command.',
     usage: `\`${pref.prefix}help\` \n \`${pref.prefix}help\` [command]`,
-    cooldown: 1,
+    cooldown: 3,
     async execute(client, message, args) {
         if(args[0]) {
             if(args[0].toLowerCase()=="setup") {
-                const commandhelpembed = new Discord.MessageEmbed()
+                const commandhelpembed = new MessageEmbed()
                     .setColor('#ad26d1')
                     .setTitle(`Setup`)
                     .addField('Linking Roles', `\`${pref.prefix}linkrole\` <RoleID> <Position>`, false)
@@ -26,7 +25,7 @@ module.exports = {
             if(!command) {
 
             } else {
-                const commandhelpembed = new Discord.MessageEmbed()
+                const commandhelpembed = new MessageEmbed()
                     .setColor('#ad26d1')
                     .setTitle(`Command: \`${pref.prefix}${command.name}\``)
                     .addField('Description', `${command.description}`, false)
@@ -35,7 +34,7 @@ module.exports = {
             }
 
         } else {
-            const helpembed = new Discord.MessageEmbed()
+            const helpembed = new MessageEmbed()
                 .setColor('#ad26d1')
                 .setAuthor(`${message.client.user.username}`, `${message.client.user.displayAvatarURL()}`)
                 .setDescription(`A list of commands is below. Use \`${pref.prefix}help [command]\` for more detailed information on a command.`)

@@ -1,14 +1,13 @@
-const { client, clientcmds } = require("../index");
-const Discord = require(`discord.js`);
+const { Collection, MessageEmbed } = require(`discord.js`);
 const { prefix } = require('../config/config.json');
-const xpcooldown = new Discord.Collection;
-const commandcooldown = new Discord.Collection;
+const xpcooldown = new Collection;
+const commandcooldown = new Collection;
 const ranks = require("../data/ranks");
 
 const getRandomXP = require("../functions/getRandomXP");
 const addXP = require("../functions/addXP");
 
-client.on('message', async message => {
+module.exports = async (client, message) => {
     if(message.author.bot || message.channel.type == "dm") {
         return;
     }
@@ -43,11 +42,11 @@ client.on('message', async message => {
     if(message.content.startsWith(prefix)) {
         const args = message.content.slice(prefix.length).split(/ +/);
         const commandName = args.shift().toLowerCase();
-        const command = clientcmds.get(commandName)
+        const command = client.commands.get(commandName)
         if(command==undefined) return;
 
         if (!commandcooldown.has(command.name)) {
-            commandcooldown.set(command.name, new Discord.Collection());
+            commandcooldown.set(command.name, new Collection());
         }
 
         const now = Date.now();
@@ -59,7 +58,7 @@ client.on('message', async message => {
 
             if(now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
-                const timeembed = new Discord.MessageEmbed()
+                const timeembed = new MessageEmbed()
                     .setColor('#dd4545')
                     .setDescription(`**wait ${timeLeft.toFixed(1)} more second(s)**`)
                 return message.channel.send(timeembed).then(async msg => { await msg.delete({timeout: 1000}) })
@@ -70,4 +69,4 @@ client.on('message', async message => {
         setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
         await command.execute(client, message, args);
     }
-});
+}
