@@ -19,10 +19,12 @@ module.exports = async (client, VoiceState) => {
 
             } else {
                 if(VCXP.get(VoiceState.member.id) != VoiceState.member.voice.channelID) {
+                    VCXP.delete(VoiceState.member.id);
                     VCXP.set(VoiceState.member.id, VoiceState.member.voice.channelID);
                 }
-                let memperchan = VCXP.filter(ch => VoiceState.member.voice.channelID)
-                if(memperchan.size>=2) {                
+                let memperchan = VCXP.filter(ch => ch == VoiceState.member.voice.channelID);
+                console.log(memperchan.size); 
+                if(memperchan.size>=2) {     
                     addXP(VoiceState.member.id, getRandomXP(1, 15), VoiceState.member.user.tag, 0, 0).then(async val => {
                         let r = await ranks.findOne({ guild_id: VoiceState.guild.id, rank_id: val[1]});
                         let rolecheck = 0;
@@ -40,5 +42,5 @@ module.exports = async (client, VoiceState) => {
                 }
             }
         }
-    }, 30000)
+    }, 5000)
 }
