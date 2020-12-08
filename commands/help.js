@@ -36,7 +36,7 @@ module.exports = {
         } else {
             const helpembed = new MessageEmbed()
                 .setColor('#ad26d1')
-                .setAuthor(`${message.client.user.username}`, `${message.client.user.displayAvatarURL()}`)
+                .setAuthor(`${message.client.user.username}`, `${message.client.user.displayAvatarURL()}`, 'https://discord.com/invite/FAARS2NdjE')
                 .setDescription(`A list of commands is below. Use \`${pref.prefix}help [command]\` for more detailed information on a command.`)
                 .addField('Setup', '`linkrole`,`removelinkedrole` \n', false)
                 .addField('General', '`help`, `invite`, `stats`, `support`, `upvote` \n', false)
