@@ -33,7 +33,7 @@ module.exports = {
         let author = message.author.id
         TTT.set(author, playg);
         const filter = m => m.author.id === author || m.author.id === target;
-        const collector = message.channel.createMessageCollector(filter, { time: 60000});
+        const collector = message.channel.createMessageCollector(filter, { time: 60000 });
         const t = new MessageEmbed()
             .setDescription(playg)
         message.channel.send(t).then(msg => {
@@ -55,6 +55,7 @@ module.exports = {
                         TTT.set(target, e);
                         var val = winchecker(e)
                         if(val == true) {
+                            TTT.delete(target);
                             let wine = new MessageEmbed()
                                 .setDescription(`<@${author}> has won.`)
                             message.channel.send(wine);
@@ -77,6 +78,7 @@ module.exports = {
                             TTT.set(author, e);
                             var val = winchecker(e)
                             if(val == true) {
+                                TTT.delete(author);
                                 let wine = new MessageEmbed()
                                     .setDescription(`<@${target}> has won.`)
                                 message.channel.send(wine);
