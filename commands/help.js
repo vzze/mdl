@@ -38,7 +38,7 @@ module.exports = {
                 .setAuthor(`${message.client.user.username}`, `${message.client.user.displayAvatarURL()}`, 'https://discord.com/invite/FAARS2NdjE')
                 .setDescription(`A list of commands is below. Use \`${pref.prefix}help [command]\` for more detailed information on a command.`)
                 .addField('Setup', '`linkrole`,`removelinkedrole` \n', false)
-                .addField('General', '`help`, `invite`, `stats`, `support`, `upvote` \n', false)
+                .addField('General', '`help`, `invite`, `stats`, `support`, `upvote`, `challenge` \n', false)
                 .addField('Customization', '`addcard`, `cardavatar`, `removecard`')
                 .addField('Levelling', '`leaderboard`, `level`, `global`', false)
                 .setFooter(`Users receive 1-15 XP whilst being in a voice channel & 15-25 XP per message sent every 30 seconds.`);
