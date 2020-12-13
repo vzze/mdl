@@ -19,20 +19,18 @@ module.exports = {
         }
         argument = argument.slice(0, -3)
         argument.trim();
+        
         switch(method) {
             case 'fetchClientValues':
-                client.shard.fetchClientValues(`${argument}`)
-                .then(val => {
-                    message.channel.send(`\`\`\` ${val} \`\`\``)
-                })
+                    client.shard.fetchClientValues(`${argument}`)
+                        .then(val => message.channel.send(`\`\`\` ${val} \`\`\``))
+                        .catch(e => message.channel.send(`\`\`\` ${e} \`\`\``));
             break;
             case 'broadcastEval':
                 client.shard.broadcastEval(`${argument}`)
-                    .then(val => {
-                        message.channel.send(`\`\`\` ${val} \`\`\``)
-                    })
+                    .then(val => message.channel.send(`\`\`\` ${val} \`\`\``))
+                    .catch(e => message.channel.send(`\`\`\` ${e} \`\`\``));
             break;
         }
-
     }
 }

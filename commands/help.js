@@ -1,7 +1,6 @@
 const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
 const pref = require('../config/config.json')
 
-
 module.exports = {
     name: 'help',
     description: 'Lists all the commands or info about a specific command.',

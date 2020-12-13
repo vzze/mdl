@@ -43,7 +43,6 @@ module.exports = {
         let actualuserxp = customcard.xp - currlevelxp;
         let percentage = (actualuserxp * 100) / actualtarlevelxp;
         let levelzeroxpperc = customcard.xp / 100;
-        
 
         if(customcard.level != 0) {
             bigcheck = 1;

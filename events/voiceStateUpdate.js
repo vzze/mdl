@@ -1,6 +1,6 @@
 const { Collection } = require("discord.js");
-const getRandomXP = require("../functions/getRandomXP");
-const addXP = require("../functions/addXP");
+const getRandomXP = require("../functions/XP/getRandomXP");
+const addXP = require("../functions/XP/addXP");
 const VCXP = new Collection;
 const ranks = require("../data/ranks");
 

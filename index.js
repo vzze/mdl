@@ -37,7 +37,7 @@ manager.on("shardCreate", shard => {
     })
 });
 
-manager.spawn("auto");
+manager.spawn(2);
 
 
 

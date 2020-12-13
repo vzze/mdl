@@ -4,8 +4,8 @@ const xpcooldown = new Collection;
 const commandcooldown = new Collection;
 const ranks = require("../data/ranks");
 
-const getRandomXP = require("../functions/getRandomXP");
-const addXP = require("../functions/addXP");
+const getRandomXP = require("../functions/XP/getRandomXP");
+const addXP = require("../functions/XP/addXP");
 
 module.exports = async (client, message) => {
     if(message.author.bot || message.channel.type == "dm") {

@@ -1,5 +1,5 @@
-const users = require('../data/users');
-const lvls = require('../config/levels.json');
+const users = require('../../data/users');
+const lvls = require('../../config/levels.json');
 
 module.exports = async (id, amount, name, checker, newlvl) => {
     let levelupchecker = 0;
