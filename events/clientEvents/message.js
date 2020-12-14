@@ -1,11 +1,11 @@
 const { Collection, MessageEmbed } = require(`discord.js`);
-const { prefix } = require('../config/config.json');
+const { prefix } = require('../../config/config.json');
 const xpcooldown = new Collection;
 const commandcooldown = new Collection;
-const ranks = require("../data/ranks");
+const ranks = require("../../data/ranks");
 
-const getRandomXP = require("../functions/XP/getRandomXP");
-const addXP = require("../functions/XP/addXP");
+const getRandomXP = require("../../functions/XP/getRandomXP");
+const addXP = require("../../functions/XP/addXP");
 
 module.exports = async (client, message) => {
     if(message.author.bot || message.channel.type == "dm") {

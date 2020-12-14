@@ -1,8 +1,8 @@
 const { Collection } = require("discord.js");
-const getRandomXP = require("../functions/XP/getRandomXP");
-const addXP = require("../functions/XP/addXP");
+const getRandomXP = require("../../functions/XP/getRandomXP");
+const addXP = require("../../functions/XP/addXP");
 const VCXP = new Collection;
-const ranks = require("../data/ranks");
+const ranks = require("../../data/ranks");
 
 module.exports = async (client, VoiceState) => {
     if(VoiceState.member.user.bot) return;
