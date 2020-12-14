@@ -4,6 +4,7 @@ const pref = config.prefix;
 const {playg, boardnums} = require("../config/tictactoe.json");
 const TTT = new Collection();
 const winchecker = require("../functions/tictactoe/checker")
+const endchecker = require("../functions/tictactoe/endchecker");
 
 module.exports = {
     name: 'challenge',
@@ -61,6 +62,7 @@ module.exports = {
                             message.channel.send(wine);
                             collector.stop();
                         }
+                        if(endchecker(e) == true) collector.stop();
                     }
                 } else {
                     if(TTT.has(target)) {
@@ -84,6 +86,7 @@ module.exports = {
                                 message.channel.send(wine);
                                 collector.stop();
                             }
+                            if(endchecker(e) == true) collector.stop();
                         }
                     }
                 }

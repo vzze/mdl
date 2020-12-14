@@ -26,8 +26,4 @@ if(client.shard.ids[0] === 0) {
     hooker.exec(client, weebhook);
 }
 
-module.exports = {
-    dbl: dbl,
-}
-
 client.login(token);
