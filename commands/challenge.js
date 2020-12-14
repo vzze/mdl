@@ -33,7 +33,7 @@ module.exports = {
         let author = message.author.id
         TTT.set(author, playg);
         const filter = m => m.author.id === author || m.author.id === target;
-        const collector = message.channel.createMessageCollector(filter, { time: 60000 });
+        const collector = message.channel.createMessageCollector(filter, { time: 180000 });
         const t = new MessageEmbed()
             .setDescription(playg)
         message.channel.send(t).then(msg => {

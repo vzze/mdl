@@ -8,7 +8,7 @@ module.exports = {
     usage: `\`${pref.prefix}cardavatar\``,
     cooldown: 3,
     async execute(client, message, args) {
-        const u = await users.findOne({ user_id: message.author.id });
+        let u = await users.findOne({ user_id: message.author.id });
         var ok = 1;
         if(u==undefined) {
             const newU = new users({
