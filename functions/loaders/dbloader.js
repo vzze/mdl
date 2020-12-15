@@ -13,7 +13,6 @@ module.exports.exec = (client) => {
     db.once('open', function() {
         if(client.shard.ids[0] === 0) {
             console.log(`Connected to MongoDB as ${useruser}`);
-            console.log(" ")
         }
     });
 }
