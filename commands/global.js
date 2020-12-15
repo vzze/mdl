@@ -21,7 +21,6 @@ module.exports = {
                 const leadembed = new MessageEmbed()
                         .setColor('#ad26d1')
                         .setTitle(`Global Leaderboard`)
-                        .setAuthor('Shrek', "https://i.imgur.com/1qwxfA5.png")
                         .setURL("https://discord.com/invite/FAARS2NdjE")
                         .addField('Top 10',
                             uarray.slice(0, 10)
