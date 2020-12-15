@@ -1,3 +1,3 @@
 module.exports = (weebhook, vote) => {
-    console.log(vote.user)
+    console.log(vote)
 }

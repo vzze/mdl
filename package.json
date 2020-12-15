@@ -2,7 +2,7 @@
   "name": "project08",
   "version": "1.6.2",
   "description": "",
-  "main": "index.js",
+  "main": "./main/index.js",
   "dependencies": {
     "canvas": "^2.6.1",
     "dblapi.js": "^2.4.1",
@@ -14,7 +14,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./index.js"
+    "start": "node ./main/index.js"
   },
   "repository": {
     "type": "git",

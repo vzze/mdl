@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
-const { token, shards } = require("./config/config.json");
+const { token, shards } = require("../config/config.json");
 
-const manager = new Discord.ShardingManager('./bot.js', {
+const manager = new Discord.ShardingManager('./main/bot.js', {
     token: token,
     respawn: true,
 });
