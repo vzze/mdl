@@ -1,12 +1,13 @@
 const { MessageEmbed } = require(`discord.js`);
 const process = require('process');
-const pref = require('../config/config.json');
+const {prefix, primarycol} = require('../../config/config.json');
 
 module.exports = {
     name: 'stats',
     description: `Displays the stats of the bot`,
-    usage: `\`${pref.prefix}stats\``,
+    usage: `\`${prefix}stats\``,
     cooldown: 5,
+    premium: "Non-Premium",
     async execute(client, message, args) {
         let seconds = Math.floor(process.uptime());
         let minutes = Math.floor(seconds / 60);
@@ -22,7 +23,7 @@ module.exports = {
         const glds = prom.reduce((u, guildCount) => u + guildCount, 0);
 
         const statembed = new MessageEmbed()
-            .setColor('#ad26d1')
+            .setColor(primarycol)
             .setAuthor(`${message.client.user.tag}`, `${message.client.user.displayAvatarURL()}`)
             .addField('Memory Usage', `${memoryused} MB`, true)
             .addField('Guilds', `${glds}`, true)

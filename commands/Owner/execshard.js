@@ -1,15 +1,14 @@
 const { MessageEmbed } = require(`discord.js`);
-const config = require('../config/config.json')
-const pref = config.prefix;
-const owner = config.owners;
+const {prefix, owners} = require('../../config/config.json')
 
 module.exports = {
     name: 'execshard',
     description: 'you actually think an owner command would be displayed',
-    usage: `\`${pref}so yeah i hit p\``,
+    usage: `\`${prefix}so yeah i hit p\``,
     cooldown: 1,
+    premium: "LMFAO",
     async execute(client, message, args) {
-        if(message.author.id!=owner[0]) return;
+        if(message.author.id!=owners[0]) return;
         let method = args[0];
         let argument = message.content;
         if(argument.indexOf("```js")!=-1) {

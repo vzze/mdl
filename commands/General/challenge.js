@@ -1,27 +1,27 @@
 const { MessageEmbed, Collection, Message } = require(`discord.js`);
-const config = require('../config/config.json')
-const pref = config.prefix;
-const {playg, boardnums} = require("../config/tictactoe.json");
+const { prefix, primarycol, errcol } = require('../../config/config.json')
+const {playg, boardnums} = require("../../config/tictactoe.json");
 const TTT = new Collection();
-const winchecker = require("../functions/tictactoe/checker")
-const endchecker = require("../functions/tictactoe/endchecker");
+const winchecker = require("../../functions/tictactoe/checker")
+const endchecker = require("../../functions/tictactoe/endchecker");
 
 module.exports = {
     name: 'challenge',
     description: 'Challenge a user to a minigame of choice! \n Current available minigames: TicTacToe',
-    usage: `\`${pref}challenge\` <User>`,
+    usage: `\`${prefix}challenge\` <User>`,
     cooldown: 3,
+    premium: "Non-Premium",
     async execute(client, message, args) {
         if(TTT.has(message.author.id)) {
             let alrplay = new MessageEmbed()
                 .setDescription("You're already playing with someone.")
-                .setColor("#dd4545")
+                .setColor(errcol)
             return message.channel.send(alrplay);
         }
         if(!message.mentions.users.first()) {
             let noplayer = new MessageEmbed()
                 .setDescription("I can't play with you, yet.")
-                .setColor("#dd4545")
+                .setColor(errcol)
             return message.channel.send(noplayer);
         }
         let player = message.mentions.users.first();
@@ -29,6 +29,7 @@ module.exports = {
         if(TTT.has(target)) {
             let alr2play = new MessageEmbed()
                 .setDescription(`<@${target}> is already in a game.`)
+                .setColor(errcol);
             return message.channel.send(alr2play);
         }
         let author = message.author.id
@@ -83,6 +84,7 @@ module.exports = {
                                 TTT.delete(author);
                                 let wine = new MessageEmbed()
                                     .setDescription(`<@${target}> has won.`)
+                                    .setColor(primarycol)
                                 message.channel.send(wine);
                                 collector.stop();
                             }

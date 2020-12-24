@@ -1,13 +1,13 @@
 const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
-const config = require('../config/config.json')
-const pref = config.prefix;
-const users = require('../data/users');
+const {prefix, primarycol, errcol} = require('../../config/config.json')
+const users = require('../../data/users');
 
 module.exports = {
 	name: 'leaderboard',
 	description: 'Displays the local leaderboard.',
-    usage: `\`${pref}leaderboard\` \n \`${pref}leaderboard\` 5`,
+    usage: `\`${prefix}leaderboard\` \n \`${prefix}leaderboard\` 5`,
     cooldown: 4,
+    premium: "Non-Premium",
     async execute(client, message, args) {
         if(!args[0]) {
             try {
@@ -16,7 +16,7 @@ module.exports = {
                 const uarray = Array.from(u);
                 const localarray = uarray.filter(u => message.guild.members.cache.has(u.user_id));
                 const leadembed = new MessageEmbed()
-                        .setColor('#ad26d1')
+                        .setColor(primarycol)
                         .setTitle(`${message.guild.name} Leaderboard`)
                         .setURL("https://discord.com/invite/FAARS2NdjE")
                         .addField('Top 10',
@@ -37,7 +37,7 @@ module.exports = {
                     message.channel.send(leadembed)
             } catch (e) {
                 const err3embed = new MessageEmbed()
-                    .setColor('#dd4545')
+                    .setColor(errcol)
                     .setDescription(`**No users have talked for a leaderboard to be generated.**`)
                 message.channel.send(err3embed);
             } 
@@ -51,7 +51,7 @@ module.exports = {
                         const uarray = Array.from(u);
                         const localarray = uarray.filter(u => message.guild.members.cache.has(u.user_id));
                         const leadembed = new MessageEmbed()
-                                .setColor('#ad26d1')
+                                .setColor(primarycol)
                                 .setTitle(`${message.guild.name} Leaderboard`)
                                 .setURL("https://discord.com/invite/FAARS2NdjE")
                                 .addField(`Top ${args[0]}`,
@@ -72,19 +72,19 @@ module.exports = {
                             message.channel.send(leadembed)
                     } catch (e) {
                         const err3embed = new Discord.MessageEmbed()
-                            .setColor('#dd4545')
+                            .setColor(errcol)
                             .setDescription(`**No users have talked for a leaderboard to be generated.**`)
                         message.channel.send(err3embed);
                     }
                 } else {
                     const err3embed = new Discord.MessageEmbed()
-                        .setColor('#dd4545')
+                        .setColor(errcol)
                         .setDescription(`**Must be inbetween 1 and 30.**`)
                     message.channel.send(err3embed);
                 }
             } else {
                 const err2embed = new Discord.MessageEmbed()
-                    .setColor('#dd4545')
+                    .setColor(errcol)
                     .setDescription(`**Must be a number**`)
                 message.channel.send(err2embed);
             }

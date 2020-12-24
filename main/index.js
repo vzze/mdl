@@ -1,10 +1,17 @@
 const Discord = require("discord.js");
-const { token, shards } = require("../config/config.json");
-
+const { token, shards, dblToken } = require("../config/config.json");
 const manager = new Discord.ShardingManager('./main/bot.js', {
     token: token,
     respawn: true,
 });
+
+const AutoPoster = require('topgg-autoposter')
+
+const ap = AutoPoster(dblToken, manager);
+
+ap.on("posted", () => {
+    console.log("Posted stats on top.gg");
+})
 
 manager.on("shardCreate", shard => {
     console.log(`Created Shard ${shard.id}`)
@@ -15,7 +22,6 @@ manager.on("shardCreate", shard => {
     shard.on("disconnect", () => {
         console.log(`Shard ${shard.id} disconnected`);
     })
-
     shard.on("reconnecting", () => {
         console.log(`Shard ${shard.id} is reconnecting`);
     })
@@ -38,6 +44,7 @@ manager.on("shardCreate", shard => {
 });
 
 manager.spawn(shards);
+
 
 
 

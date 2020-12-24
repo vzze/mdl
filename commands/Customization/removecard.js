@@ -1,12 +1,13 @@
 const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
-const pref = require('../config/config.json')
-const users = require('../data/users');
+const { prefix, primarycol, errcol } = require('../../config/config.json')
+const users = require('../../data/users');
 
 module.exports = {
     name: 'removecard',
     description: "Removes your custom card and reverts to the original one.",
-    usage: `\`${pref.prefix}removecard\``,
+    usage: `\`${prefix}removecard\``,
     cooldown: 3,
+    premium: "Non-Premium",
     async execute(client, message, args) {
         const u = await users.findOne({ user_id: message.author.id });
         if(u==undefined) {
@@ -30,19 +31,19 @@ module.exports = {
             } catch (e) {
                 ok = 0;
                 const l2embed = new MessageEmbed()
-                    .setColor('#dd4545')
+                    .setColor(errcol)
                     .setDescription(`**Caught an error.**`)
                 message.channel.send(l2embed);
             }
             if(ok==1) {
                 const l3embed = new MessageEmbed()
-                    .setColor('#ad26d1')
+                    .setColor(primarycol)
                     .setDescription(`**Succesfully removed your rank card.**`);
                 message.channel.send(l3embed);
             }
         } else {
             const l3embed = new MessageEmbed()
-                .setColor('#dd4545')
+                .setColor(errcol)
                 .setDescription(`**You don\'t have a rank card in the first place.**`)
             message.channel.send(l3embed);
         }

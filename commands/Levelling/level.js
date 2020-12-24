@@ -1,19 +1,20 @@
 const { MessageEmbed, MessageAttachment, DiscordAPIError } = require(`discord.js`);
-const config = require('../config/config.json')
-const pref = config.prefix;
-const users = require('../data/users');
-const lvls = require('../config/levels.json');
+const {prefix, primarycol, errcol} = require('../../config/config.json');
+const users = require('../../data/users');
+const lvls = require('../../config/levels.json');
 const Canvas = require("canvas");
+const { serverlist } = require("../../events/clientEvents/ready");
 
 module.exports = {
 	name: 'level',
 	description: 'Shows a users level.',
-    usage: `\`${pref}level\` \n \`${pref}level\` <User>`,
+    usage: `\`${prefix}level\` \n \`${prefix}level\` <User>`,
     cooldown: 3,
+    premium: "Non-Premium",
     async execute(client, message, args) {
         if(!message.guild.member(client.user.id).hasPermission("ATTACH_FILES")) {
             const noelembed = new MessageEmbed()
-                .setColor('#dd4545')
+                .setColor(errcol)
                 .setDescription(`**I don\'t have permissions to send images.**`)
            return message.channel.send(noelembed);
         }
@@ -27,7 +28,8 @@ module.exports = {
                 level: 0, 
                 user_name: `${target.tag}`,
                 rankcardlink: 0,
-                rankavatar: 1
+                rankavatar: 1,
+                guild_id: `${message.guild.id}`
             });
             newU.save();
             customcard = newU;
@@ -96,8 +98,20 @@ module.exports = {
             const specialbackground = await Canvas.loadImage(`${imlink}`)
             ctx.drawImage(specialbackground, 0, 0, canvas.width, canvas.height);
         } else {
-            const background = await Canvas.loadImage('./data/levelcarddata/mandemcard.png');
-        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+            let sv = serverlist.get(message.guild.id)
+            if(sv.premium == 1) {
+                if(sv.defaultlevelimage != '0') {
+                    const svbackground = await Canvas.loadImage(`${sv.defaultlevelimage}`);
+                    ctx.drawImage(svbackground, 0, 0, canvas.width, canvas.height);
+                } else {
+                    const background = await Canvas.loadImage('./data/levelcarddata/mandemcard.png');
+                    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+                }
+            } else {
+                const background = await Canvas.loadImage('./data/levelcarddata/mandemcard.png');
+                ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+            }
+            
         }
 
         var fontsize = 47;

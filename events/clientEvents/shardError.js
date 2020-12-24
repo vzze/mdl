@@ -1,3 +1,5 @@
-module.exports = (client, err) => {
-    console.log(err);
+module.exports = {
+    run(client, err) {
+        console.log(err);
+    }
 }

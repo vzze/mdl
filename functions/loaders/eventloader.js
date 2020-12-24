@@ -2,7 +2,8 @@ const fs = require("fs")
 
 module.exports.exec = (client) => {
     for(const f of fs.readdirSync('./events/clientEvents').filter(file => file.endsWith('.js'))) {
-        const event = require(`../../events/clientEvents/${f}`);
+        const ev = require(`../../events/clientEvents/${f}`);
+        const event = ev.run;
         const eventN = f.split(".").shift();
         client.on(eventN, event.bind(null, client));
     }

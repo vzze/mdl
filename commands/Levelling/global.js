@@ -1,13 +1,13 @@
 const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
-const config = require('../config/config.json')
-const users = require('../data/users');
-const pref = config.prefix;
+const {prefix, primarycol, errcol} = require('../../config/config.json')
+const users = require('../../data/users');
 
 module.exports = {
 	name: 'global',
 	description: 'Displays the global leaderboard.',
-    usage: `\`${pref}global\` \n \`${pref}global\` 5`,
+    usage: `\`${prefix}global\` \n \`${prefix}global\` 5`,
     cooldown: 10,
+    premium: "Non-Premium",
     async execute(client, message, args) {
         function stringify(usern) {
             let privateusern = usern.substring(0, usern.length - 5)
@@ -19,7 +19,7 @@ module.exports = {
                 u.sort((a, b) => b.xp - a.xp)
                 const uarray = Array.from(u);
                 const leadembed = new MessageEmbed()
-                        .setColor('#ad26d1')
+                        .setColor(primarycol)
                         .setTitle(`Global Leaderboard`)
                         .setURL("https://discord.com/invite/FAARS2NdjE")
                         .addField('Top 10',
@@ -40,7 +40,7 @@ module.exports = {
                     message.channel.send(leadembed)
             } catch (e) {
                 const err3embed = new MessageEmbed()
-                    .setColor('#dd4545')
+                    .setColor(errcol)
                     .setDescription(`**No users have talked for a leaderboard to be generated.**`)
                 message.channel.send(err3embed);
             }
@@ -53,7 +53,7 @@ module.exports = {
                         u.sort((a, b) => b.xp - a.xp)
                         const uarray = Array.from(u);
                         const leadembed = new MessageEmbed()
-                                .setColor('#ad26d1')
+                                .setColor(primarycol)
                                 .setTitle(`Global Leaderboard`)
                                 .setURL("https://discord.com/invite/FAARS2NdjE")
                                 .addField(`Top ${args[0]}`,
@@ -74,19 +74,19 @@ module.exports = {
                             message.channel.send(leadembed)
                     } catch (e) {
                         const err3embed = new MessageEmbed()
-                            .setColor('#dd4545')
+                            .setColor(errcol)
                             .setDescription(`**No users have talked for a leaderboard to be generated.**`)
                         message.channel.send(err3embed);
                     }
                 } else {
                     const err3embed = new MessageEmbed()
-                        .setColor('#dd4545')
+                        .setColor(errcol)
                         .setDescription(`**Must be inbetween 1 and 30.**`)
                     message.channel.send(err3embed);
                 }
             } else {
                 const err2embed = new MessageEmbed()
-                    .setColor('#dd4545')
+                    .setColor(errcol)
                     .setDescription(`**Must be a number**`)
                 message.channel.send(err2embed);
             }

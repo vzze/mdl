@@ -1,16 +1,17 @@
 const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
-const pref = require('../config/config.json');
-const ranks = require("../data/ranks");
+const {prefix, primarycol, errcol} = require('../../config/config.json');
+const ranks = require("../../data/ranks");
 
 module.exports = {
     name: 'linkrole',
     description: "Links a role.",
-    usage: `\`${pref.prefix}linkrole\` <RoleID> <Level> \n \`${pref.prefix}linkrole\` 774601811428114432 5`,
+    usage: `\`${prefix}linkrole\` <RoleID> <Level> \n \`${prefix}linkrole\` 774601811428114432 5`,
     cooldown: 3,
+    premium: "Non-Premium",
     async execute(client, message, args) {
         if(!message.guild.member(client.user.id).hasPermission("MANAGE_ROLES")) {
             const noelembed = new MessageEmbed()
-                .setColor('#dd4545')
+                .setColor(errcol)
                 .setDescription(`**I don\'t have permissions to manage roles.**`)
             return message.channel.send(noelembed);
         }
@@ -32,14 +33,14 @@ module.exports = {
                                 newLinkedRole.save();
                             } else {
                                 const elembed = new MessageEmbed()
-                                    .setColor('#dd4545')
+                                    .setColor(errcol)
                                     .setDescription(`**Role does not exist.**`)
                                 message.channel.send(elembed);
                                 ok = 0;
                             }
                         } catch (e) {
                             const elembed = new MessageEmbed()
-                                .setColor('#dd4545')
+                                .setColor(errcol)
                                 .setDescription(`**Caught an error.**`)
                             message.channel.send(elembed);
                             ok = 0;
@@ -47,31 +48,31 @@ module.exports = {
   
                         if(ok==1) {
                             const el2embed = new MessageEmbed()
-                                .setColor('#ad26d1')
+                                .setColor(primarycol)
                                 .setDescription(`**Linked role successfully.**`)
                             message.channel.send(el2embed);
                         }
                     } else {
                         const el5embed = new MessageEmbed()
-                            .setColor('#dd4545')
+                            .setColor(errcol)
                             .setDescription(`**Must be a number and must be inbetween 1-100.**`)
                         message.channel.send(el5embed);
                     }
                 } else {
                     const el4embed = new MessageEmbed()
-                        .setColor('#dd4545')
+                        .setColor(errcol)
                         .setDescription(`**Must mention the position (level) for the role.**`)
                     message.channel.send(el4embed);
                 }
             } else {
                 const el3embed = new MessageEmbed()
-                    .setColor('#dd4545')
+                    .setColor(errcol)
                     .setDescription(`**Must mention the role ID.**`)
                 message.channel.send(el3embed);
             }
         } else {
             const el3embed = new MessageEmbed()
-                .setColor('#dd4545')
+                .setColor(errcol)
                 .setDescription(`**You must be able to manage roles.**`)
             message.channel.send(el3embed);
         }
