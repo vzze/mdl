@@ -40,6 +40,7 @@ module.exports = {
                 .setColor(errcol);
             return message.channel.send(r);
         }
+        
         let ch = message.guild.channels.cache.find(r => r.id == args[0]);
         if(!ch) {
             let nr = new MessageEmbed()
