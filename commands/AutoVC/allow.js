@@ -27,26 +27,24 @@ module.exports = {
             } catch (e) {
                 arr.pop(m);
             }
-            let txtchan = linker.get(chan.id)
-            if(txtchan) {
-                let e = new MessageEmbed()
-                    .setColor(primarycol)
-                    .addField('Allowed members', 
-                    arr.map(t => `\`${t.tag}\``)
-                        .join(", ")
-                    )
-                    txtchan.send(e);
-            } else {
-                let e = new MessageEmbed()
-                    .setColor(primarycol)
-                    .addField('Allowed members', 
-                    arr.map(t => `\`${t.tag}\``)
-                        .join(", ")
-                    )
-                message.channel.send(e);
-            }
-
-            
         })
+        let txtchan = linker.get(chan.id)
+        if(txtchan) {
+            let e = new MessageEmbed()
+                .setColor(primarycol)
+                .addField('Allowed members', 
+                arr.map(t => `\`${t.tag}\``)
+                    .join(", ")
+                )
+                txtchan.send(e);
+        } else {
+            let e = new MessageEmbed()
+                .setColor(primarycol)
+                .addField('Allowed members', 
+                arr.map(t => `\`${t.tag}\``)
+                    .join(", ")
+                )
+            message.channel.send(e);
+        }
     }
 }

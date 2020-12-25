@@ -1,7 +1,7 @@
 const users = require('../../data/users');
 const lvls = require('../../config/levels.json');
 
-module.exports = async (id, amount, name, checker, newlvl, gid) => {
+module.exports = async (id, amount, name, checker, newlvl) => {
     let levelupchecker = 0;
     let newlevel = 0;
     var query = { user_id: id }
@@ -10,7 +10,6 @@ module.exports = async (id, amount, name, checker, newlvl, gid) => {
         let newxp = u.xp + amount;
         await u.updateOne({ xp: newxp });
         await u.updateOne({ user_name: `${name}` });
-        await u.updateOne({ guild_id: `${gid}`});
         newlevel = u.level;
         if(newxp >= lvls.lvl[u.level] && u.level <= 149 && newxp >= 100) {
             levelupchecker = 1;
@@ -32,7 +31,6 @@ module.exports = async (id, amount, name, checker, newlvl, gid) => {
             user_name: `${name}`,
             rankcardlink: 0,
             rankavatar: 1,
-            guild_id: `${gid}`
         });
         newU.save();
         let a = [levelupchecker, newlevel];

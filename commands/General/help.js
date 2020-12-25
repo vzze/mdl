@@ -18,6 +18,7 @@ module.exports = {
                     modules.map(m => `\`${m}\``)
                         .join(", ") + `\n \u200B \n \`${prefix}help [module]\` for the commands of a module.`
                 )
+                .setFooter('For now AutoVC is locked behind premium, if you want to test it please join the support server.')
             return message.channel.send(helpembed);
         }
         const name = args[0].toLowerCase();
