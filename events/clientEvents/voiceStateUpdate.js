@@ -45,6 +45,7 @@ module.exports = {
                 }
             }
         }
+
         PC2V.exec(v.member.voice.channelID, link, v);
         if(v.member.voice.channelID == sv.mainvc) CC.exec(v, prVC, link, sv);
 
