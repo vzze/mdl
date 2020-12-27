@@ -1,7 +1,8 @@
 module.exports.exec = (v, lol, prVC, link) => {
     let temp = lol;
     let vcchan = temp.vc;
-    if(vcchan.members.size == 0) {
+    const [users, bots] = vcchan.members.partition(m => m.bot == false);
+    if(users.size == 0) {
         if(link.has(temp.vc.id)) {
             let text = link.get(temp.vc.id);
             text.delete();

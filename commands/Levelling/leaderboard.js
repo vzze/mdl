@@ -1,6 +1,6 @@
 const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
 const {prefix, primarycol, errcol} = require('../../config/config.json')
-const users = require('../../data/users');
+const members = require("../../data/guildusers");
 
 module.exports = {
 	name: 'leaderboard',
@@ -11,26 +11,25 @@ module.exports = {
     async execute(client, message, args) {
         if(!args[0]) {
             try {
-                const u = await users.find();
+                const u = await members.find({ guild_id: message.guild.id});
                 u.sort((a, b) => b.xp - a.xp)
                 const uarray = Array.from(u);
-                const localarray = uarray.filter(u => message.guild.members.cache.has(u.user_id));
                 const leadembed = new MessageEmbed()
                         .setColor(primarycol)
                         .setTitle(`${message.guild.name} Leaderboard`)
                         .setURL("https://discord.com/invite/FAARS2NdjE")
                         .addField('Top 10',
-                            localarray.slice(0, 10)
+                            uarray.slice(0, 10)
                                 .map((user, position) => `**${position + 1}**. \`${user.user_name}\``)
                                 .join('\n'), true
                         )
                         .addField('Level',
-                        localarray.slice(0, 10)
+                        uarray.slice(0, 10)
                                 .map((user) => `\`${user.level}\``)
                                 .join('\n'), true
                         )
                         .addField('XP',
-                        localarray.slice(0, 10)
+                        uarray.slice(0, 10)
                                 .map((user) => `\`${user.xp}\``)
                                 .join('\n'), true
                         )
@@ -46,26 +45,25 @@ module.exports = {
                 if(args[0] >= 1 && args[0] <= 30) {
                     args[0] = Math.floor(args[0]);
                     try {
-                        const u = await users.find();
+                        const u = await members.find({ guild_id: message.guild.id});
                         u.sort((a, b) => b.xp - a.xp)
                         const uarray = Array.from(u);
-                        const localarray = uarray.filter(u => message.guild.members.cache.has(u.user_id));
                         const leadembed = new MessageEmbed()
                                 .setColor(primarycol)
                                 .setTitle(`${message.guild.name} Leaderboard`)
                                 .setURL("https://discord.com/invite/FAARS2NdjE")
                                 .addField(`Top ${args[0]}`,
-                                localarray.slice(0, args[0])
+                                uarray.slice(0, args[0])
                                         .map((user, position) => `**${position + 1}**. \`${user.user_name}\``)
                                         .join('\n'), true
                                 )
                                 .addField('Level',
-                                localarray.slice(0, args[0])
+                                uarray.slice(0, args[0])
                                         .map((user) => `\`${user.level}\``)
                                         .join('\n'), true
                                 )
                                 .addField('XP',
-                                localarray.slice(0, args[0])
+                                uarray.slice(0, args[0])
                                         .map((user) => `\`${user.xp}\``)
                                         .join('\n'), true
                                 )

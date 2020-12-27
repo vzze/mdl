@@ -1,13 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 Schema = mongoose.Schema;
 
-const member = new Schema({
+const member = new mongoose.Schema({
     user_id: { type: String, unique: false },
+    guild_id: { type: String, unique: false},
+    user_name: { type: String, unique: false, default: undefined },
     xp: { type: Number, default: null },
     level: { type: Number, default: null },
-    guild_id: { type: String, unique: false, default: '0' },
-});
+})
 
 const members = mongoose.model('members', member)
 

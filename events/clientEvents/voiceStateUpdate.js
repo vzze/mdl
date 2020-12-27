@@ -7,6 +7,7 @@ const link = new Collection();
 const ranks = require("../../data/ranks");
 
 const { serverlist } = require("../../events/clientEvents/ready");
+const memberaddXP = require("../../functions/XP/memberaddXP");
 const getRandomXP = require("../../functions/XP/getRandomXP");
 const addXP = require("../../functions/XP/addXP");
 const CC = require("../../functions/autoVC/channelcreate");
@@ -64,7 +65,8 @@ module.exports = {
                     }
                     let memperchan = VCXP.filter(ch => ch == v.member.voice.channelID);
                     if(memperchan.size>=2) {     
-                        addXP(v.member.id, getRandomXP(1, 15), v.member.user.tag, 0, 0).then(async val => {
+                        addXP(v.member.id, getRandomXP(1, 15), v.member.user.tag, 0, 0)
+                        memberaddXP(v.member.id, getRandomXP(1, 15), v.member.user.tag, 0, 0, v.guild.id).then(async val => {
                             let r = await ranks.findOne({ guild_id: v.guild.id, rank_id: val[1]});
                             let rolecheck = 0;
                             if(r!=undefined) {

@@ -4,7 +4,7 @@ const manager = new Discord.ShardingManager('./main/bot.js', {
     token: token,
     respawn: true,
 });
-
+/*
 const AutoPoster = require('topgg-autoposter')
 
 const ap = AutoPoster(dblToken, manager);
@@ -12,7 +12,7 @@ const ap = AutoPoster(dblToken, manager);
 ap.on("posted", () => {
     console.log("Posted stats on top.gg");
 })
-
+*/
 manager.on("shardCreate", shard => {
     console.log(`Created Shard ${shard.id}`)
     shard.on("message", message => {

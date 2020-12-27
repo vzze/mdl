@@ -17,7 +17,10 @@ module.exports = {
                 level: 0, 
                 user_name: `${message.author.tag}`,
                 rankcardlink: 0,
-                rankavatar: 1
+                rankavatar: 1,
+                prcolor: "0",
+                seccolor: "0",
+                quote: "0"
             });
             newU.save();
             u = newU;
