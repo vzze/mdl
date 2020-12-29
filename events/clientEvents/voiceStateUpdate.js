@@ -36,12 +36,12 @@ module.exports = {
                         if(a[1] == true) {
                             if(v.member.voice.channelID != null && v.member.voice.channel.parentID == sv.parent) {
                                 prVC.set(v.member.id, {owner: false, vc: v.member.voice.channel});
-                            } 
+                            } else prVC.delete(v.member.id);
                         }
                         if(b.owner == false) {
                             if(v.member.voice.channelID != null && v.member.voice.channel.parentID == sv.parent) {
                                 prVC.set(v.member.id, {owner: false, vc: v.member.voice.channel});
-                            }
+                            } else prVC.delete(v.member.id);
                         }
                     }
                 }

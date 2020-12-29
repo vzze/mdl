@@ -1,6 +1,7 @@
 const { prefix } = require("../../config/config.json");
 const { vccoll } = require("../../events/clientEvents/voiceStateUpdate")
 const { serverlist } = require("../../events/clientEvents/ready");
+const { MessageEmbed } = require('discord.js')
 
 module.exports = {
     name: `claim`,
