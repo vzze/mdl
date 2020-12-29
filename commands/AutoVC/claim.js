@@ -10,12 +10,14 @@ module.exports = {
     premium: "Premium",
     execute(client, message, args) {
         if(!serverlist.has(message.guild.id)) return;
+        let sv = serverlist.get(message.guild.id);
         let target = message.author;
         let mem = message.guild.member(target);
-        let o = vccoll.findKey(c => c.vc.id == mem.voice.channelID && c.owner == true)
         if(mem.voice.channelID == null) return;
+        if(mem.voice.channel.parentID != sv.parent) return;
+        let o = vccoll.findKey(c => c.vc.id == mem.voice.channelID && c.owner == true)
         if(o) return;
-        vccoll.set(target.id, { owner: true, vc: chan});
+        vccoll.set(target.id, { owner: true, vc: mem.voice.channel});
         let tranem = new MessageEmbed()
                 .setDescription(`<@${target.id}> has claimed the VC!`)
                 .setColor(primarycol)

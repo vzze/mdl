@@ -22,34 +22,32 @@ module.exports = {
         if(v.member.user.bot) return;
         let sv = serverlist.get(v.guild.id);
         if(sv) {
-            if(v.member.voice.channel.parentID == sv.parent) {
-                if(!prVC.has(v.member.id) && v.member.voice.channelID != null) prVC.set(v.member.id, { owner: false, vc: v.member.voice.channel });
-                let b = prVC.get(v.member.id);
-                if(b) {
-                    if(v.member.voice.channelID != b.vc.id) {
-                        let a = VCCheker.exec(v, b, prVC, link, sv);
-                        if(a!=42) {
-                            if(a[0] == false) {
-                                if(v.member.id != prVC.findKey(c => c.vc.id == a[1] && c.owner == true)) {
-                                    PC2U.exec(a[1], link, v);
-                                }
+            if(!prVC.has(v.member.id) && v.member.voice.channelID != null) prVC.set(v.member.id, { owner: false, vc: v.member.voice.channel });
+            let b = prVC.get(v.member.id);
+            if(b) {
+                if(v.member.voice.channelID != b.vc.id) {
+                    let a = VCCheker.exec(v, b, prVC, link, sv);
+                    if(a!=42) {
+                        if(a[0] == false) {
+                            if(v.member.id != prVC.findKey(c => c.vc.id == a[1] && c.owner == true)) {
+                                PC2U.exec(a[1], link, v);
                             }
-                            if(a[1] == true) {
-                                if(v.member.voice.channelID != null) {
-                                    prVC.set(v.member.id, {owner: false, vc: v.member.voice.channel});
-                                } 
-                            }
-                            if(b.owner == false) {
-                                if(v.member.voice.channelID != null) {
-                                    prVC.set(v.member.id, {owner: false, vc: v.member.voice.channel});
-                                }
+                        }
+                        if(a[1] == true) {
+                            if(v.member.voice.channelID != null && v.member.voice.channel.parentID == sv.parent) {
+                                prVC.set(v.member.id, {owner: false, vc: v.member.voice.channel});
+                            } 
+                        }
+                        if(b.owner == false) {
+                            if(v.member.voice.channelID != null && v.member.voice.channel.parentID == sv.parent) {
+                                prVC.set(v.member.id, {owner: false, vc: v.member.voice.channel});
                             }
                         }
                     }
                 }
-                PC2V.exec(v.member.voice.channelID, link, v);
-                if(v.member.voice.channelID == sv.mainvc) CC.exec(v, prVC, link, sv);
             }
+            PC2V.exec(v.member.voice.channelID, link, v);
+            if(v.member.voice.channelID == sv.mainvc) CC.exec(v, prVC, link, sv);
         }
 
         if(VCXP.has(v.member.id)) return;
