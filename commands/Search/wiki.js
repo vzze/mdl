@@ -5,7 +5,7 @@ const wiki = require('wikipedia');
 
 module.exports = {
     name: 'wiki',
-    description: 'Search the whole wiki from discord!',
+    description: 'Search the whole wiki from Discord!',
     usage: `\`${prefix}wiki <Query>\``,
     cooldown: 3,
     premium: "Non-Premium",

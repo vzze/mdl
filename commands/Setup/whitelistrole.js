@@ -10,7 +10,7 @@ module.exports = {
     cooldown: 5,
     premium: "Premium",
     async execute(client, message, args) {
-        if(serverlist.get(message.guild.id).premium == 0) return;
+        if(!serverlist.has(message.guild.id)) return;
         const target = message.author;
         const member = message.guild.member(target);
         if(!member.hasPermission("MANAGE_GUILD")) {
@@ -43,7 +43,7 @@ module.exports = {
         let g = await servers.findOne({guild_id: message.guild.id});
         await g.updateOne({whitelisterolevc: `${args[0]}`});
         await g.save();
-        serverlist.set(message.guild.id, {premium: g.premium, parent: g.autovcparent, mainvc: g.autovcchannel, whitelist: args[0], defaultlevelimage: g.defaultlevelimage});
+        serverlist.set(message.guild.id, {parent: g.autovcparent, mainvc: g.autovcchannel, whitelist: args[0], defaultlevelimage: g.defaultlevelimage});
         let succe = new MessageEmbed()
             .setDescription(`Set whitelisted role as \`${r.name}\``)
             .setColor(primarycol);

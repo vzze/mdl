@@ -10,7 +10,7 @@ module.exports = {
     cooldown: 5,
     premium: "Premium",
     async execute(client, message, args) {
-        if(serverlist.get(message.guild.id).premium == 0) return;
+        if(!serverlist.has(message.guild.id)) return;
         const target = message.author;
         const member = message.guild.member(target);
         if(!member.hasPermission("MANAGE_GUILD")) {
@@ -57,7 +57,7 @@ module.exports = {
         let g = await servers.findOne({guild_id: message.guild.id});
         await g.updateOne({autovcparent: `${ch.parentID}`, autovcchannel: `${ch.id}`});
         await g.save();
-        serverlist.set(message.guild.id, {premium: g.premium, parent: `${ch.parentID}`, mainvc: `${ch.id}`, whitelist: g.whitelisterolevc, defaultlevelimage: g.defaultlevelimage});
+        serverlist.set(message.guild.id, {parent: `${ch.parentID}`, mainvc: `${ch.id}`, whitelist: g.whitelisterolevc, defaultlevelimage: g.defaultlevelimage});
         let succe = new MessageEmbed()
             .setDescription(`Set main VC as \`${ch.name}\``)
             .setColor(primarycol);

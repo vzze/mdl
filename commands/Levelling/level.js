@@ -120,8 +120,8 @@ module.exports = {
             const specialbackground = await Canvas.loadImage(`${imlink}`)
             ctx.drawImage(specialbackground, 0, 0, canvas.width, canvas.height);
         } else {
-          //  let sv = serverlist.get(message.guild.id)
-            if(0 == 1) {
+            let sv = serverlist.get(message.guild.id)
+            if(sv) {
                 if(sv.defaultlevelimage != '0') {
                     const svbackground = await Canvas.loadImage(`${sv.defaultlevelimage}`);
                     ctx.drawImage(svbackground, 0, 0, canvas.width, canvas.height);

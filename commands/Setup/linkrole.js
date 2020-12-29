@@ -4,7 +4,7 @@ const ranks = require("../../data/ranks");
 
 module.exports = {
     name: 'linkrole',
-    description: "Links a role.",
+    description: "Links a role to a level.",
     usage: `\`${prefix}linkrole\` <RoleID> <Level> \n \`${prefix}linkrole\` 774601811428114432 5`,
     cooldown: 3,
     premium: "Non-Premium",

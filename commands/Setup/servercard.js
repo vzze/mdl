@@ -11,7 +11,7 @@ module.exports = {
     cooldown: 5,
     premium: "Premium",
     async execute(client, message, args) {
-        if(serverlist.get(message.guild.id).premium == 0) return;
+        if(!serverlist.has(message.guild.id)) return;
         const target = message.author;
         const member = message.guild.member(target);
         if(!member.hasPermission("MANAGE_GUILD")) {
@@ -34,7 +34,7 @@ module.exports = {
                 .setDescription("Removed your server card banner.")
                 .setColor(primarycol)
             message.channel.send(ok);
-            serverlist.set(message.guild.id, {premium: g.premium, parent: g.autovcparent, mainvc: g.autovcchannel, whitelist: g.whitelisterolevc, defaultlevelimage: `${args[0]}`});
+            serverlist.set(message.guild.id, {parent: g.autovcparent, mainvc: g.autovcchannel, whitelist: g.whitelisterolevc, defaultlevelimage: `${args[0]}`});
             return;
         }
         if(args[0].indexOf("imgur")!=-1) {
@@ -69,6 +69,6 @@ module.exports = {
             .setDescription("Uploaded server card banner!")
             .setColor(primarycol)
         message.channel.send(ok);
-        serverlist.set(message.guild.id, {premium: g.premium, parent: g.autovcparent, mainvc: g.autovcchannel, whitelist: g.whitelisterolevc, defaultlevelimage: `${args[0]}`});
+        serverlist.set(message.guild.id, {parent: g.autovcparent, mainvc: g.autovcchannel, whitelist: g.whitelisterolevc, defaultlevelimage: `${args[0]}`});
     }
 }

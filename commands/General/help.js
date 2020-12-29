@@ -28,7 +28,7 @@ module.exports = {
             if(!cmd) return;
             const command = cmd.cmd;
             const commandhelpembed = new MessageEmbed()
-                .setColor('#ad26d1')
+                .setColor(primarycol)
                 .setTitle(`Command: \`${prefix}${command.name}\``)
                 .addField('Description', `${command.description}`, false)
                 .addField('Examples', `${command.usage}`, false)

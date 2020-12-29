@@ -4,7 +4,7 @@ const {prefix, primarycol} = require('../../config/config.json');
 
 module.exports = {
     name: 'stats',
-    description: `Displays the stats of the bot`,
+    description: `Displays the stats of the bot.`,
     usage: `\`${prefix}stats\``,
     cooldown: 5,
     premium: "Non-Premium",

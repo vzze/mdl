@@ -9,7 +9,7 @@ module.exports = {
     cooldown: 3,
     premium: "Premium",
     execute(client, message, args) {
-        if(serverlist.get(message.guild.id).premium == 0) return;
+        if(!serverlist.has(message.guild.id)) return;
         const check = vccoll.get(message.author.id);
         if(!check) return;
         if(check.owner==false) return;

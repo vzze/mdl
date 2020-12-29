@@ -52,7 +52,8 @@ module.exports.exec = (v, prVC, link, sv) => {
                 \`${prefix}invisible\` - Turns your VC invisible!
                 \`${prefix}visible\` - Makes an invisible VC visible!
                 \`${prefix}allow <User>\` - No need to unlock your VC for people to join!
-                \`${prefix}transfer <User>\` - Transfers the ownership.`
+                \`${prefix}transfer <User>\` - Transfers the ownership.
+                \`${prefix}claim\` - Claim the ownership if a VC has no owner.`
                 )
                 .addField('\u200B', '[Click here to invite MDL!](https://discord.com/api/oauth2/authorize?client_id=776551374380204033&permissions=268553216&scope=bot)')
                 .setColor(primarycol)

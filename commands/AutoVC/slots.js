@@ -10,7 +10,7 @@ module.exports = {
     cooldown: 3,
     premium: "Premium",
     async execute(client, message, args) {
-        if(serverlist.get(message.guild.id).premium == 0) return;
+        if(!serverlist.has(message.guild.id)) return;
         if(!args[0]) return;
         if(isNaN(args[0])) return;
         let check = await vccoll.get(message.author.id);

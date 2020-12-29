@@ -30,7 +30,6 @@ module.exports = {
                     try {
                         await message.member.roles.add(rolecheck);
                     } catch (e) {
-                        let r = message.guild.roles.cache.find(r => r.id == rolecheck);
                         if(!r) {
                             await ranks.deleteOne({ guild_id: message.guild.id, role_id: `${rolecheck}`})
                         }
