@@ -15,23 +15,17 @@ module.exports.exec = (client) => {
         if(client.shard.ids[0] === 0) {
             console.log(`Connected to MongoDB as ${useruser}`);
             (async () => {
-                let s = await servers.find();
-                s.forEach(async ss => {
-                    if(ss.premium == 1) {
-                        const news = new servers({
-                            guild_id: ss.guild_id,
-                            autovcparent: ss.autovcparent,
-                            autovcchannel: ss.autovcchannel,
-                            whitelisterolevc: ss.whitelisterolevc,
-                            defaultlevelimage: ss.defaultlevelimage,
-                            expirationdate: ss.expirationdate,
-                        })
-                        await news.save();
-                    }
-                    await ss.deleteOne();
+                const news = new servers({
+                    guild_id: '761218352365699124',
+                    autovcparent: '762008540297953320',
+                    autovcchannel: '792405263583936512',
+                    whitelisterolevc: '761223076943757323',
+                    defaultlevelimage: '0',
+                    expirationdate: 'PERMANENT',
                 })
+                news.save();
             })()
-            
+
         }
     });
 }
