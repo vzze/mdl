@@ -22,7 +22,7 @@ module.exports = {
         if(v.member.user.bot) return;
         let sv = serverlist.get(v.guild.id);
         if(sv) {
-            if(v.member.channel.parentID == sv.parent) {
+            if(v.member.voice.channel.parentID == sv.parent) {
                 if(!prVC.has(v.member.id) && v.member.voice.channelID != null) prVC.set(v.member.id, { owner: false, vc: v.member.voice.channel });
                 let b = prVC.get(v.member.id);
                 if(b) {
