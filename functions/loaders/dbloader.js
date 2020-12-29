@@ -14,18 +14,6 @@ module.exports.exec = (client) => {
     db.once('open', function() {
         if(client.shard.ids[0] === 0) {
             console.log(`Connected to MongoDB as ${useruser}`);
-            (async () => {
-                const news = new servers({
-                    guild_id: '761218352365699124',
-                    autovcparent: '762008540297953320',
-                    autovcchannel: '792405263583936512',
-                    whitelisterolevc: '761223076943757323',
-                    defaultlevelimage: '0',
-                    expirationdate: 'PERMANENT',
-                })
-                news.save();
-            })()
-
         }
     });
 }
