@@ -16,7 +16,7 @@ module.exports.exec = (client) => {
             console.log(`Connected to MongoDB as ${useruser}`);
             (async () => {
                 let s = await servers.find();
-                s.forEach(ss => {
+                s.forEach(async ss => {
                     if(ss.premium == 1) {
                         const news = new servers({
                             guild_id: ss.guild_id,
