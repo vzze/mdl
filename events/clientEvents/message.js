@@ -22,25 +22,17 @@ module.exports = {
             addXP(message.author.id, getRandomXP(15, 25), message.author.tag, 0, 0)
             memberaddXP(message.author.id, getRandomXP(15, 25), message.author.tag, 0, 0, message.guild.id).then( async val => {
                 let r = await ranks.findOne({ guild_id: message.guild.id, rank_id: val[1] });
-                let rolecheck = 0;
-                if(r!=undefined) {
-                    rolecheck = r.role_id;
-                }
-                if(rolecheck!='0' && val[1] > 0) {
+                if(r!=undefined && val[1] > 0) {
                     try {
-                        await message.member.roles.add(rolecheck);
+                        await message.member.roles.add(r.role_id);
                     } catch (e) {
-                        if(!r) {
-                            await ranks.deleteOne({ guild_id: message.guild.id, role_id: `${rolecheck}`})
-                        }
+                        await ranks.deleteOne({ guild_id: message.guild.id, role_id: `${r.role_id}`})
                     }
                 }
                 if(val[0] == 1 && val[1] > 0) {
                     try {
                         message.channel.send(`<@${message.author.id}> has advanced to level ${val[1]}`);
-                    } catch (e) {
-                        
-                    }
+                    } catch (e) {}
                 }
             })
             xpcooldown.set(message.author.id);
