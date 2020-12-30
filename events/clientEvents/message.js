@@ -19,8 +19,8 @@ module.exports = {
             if(xpcooldown.has(message.author.id)) {
                 return;
             }
-            addXP(message.author.id, getRandomXP(15, 25), message.author.tag, 0, 0)
-            memberaddXP(message.author.id, getRandomXP(15, 25), message.author.tag, 0, 0, message.guild.id).then( async val => {
+            addXP(message.author.id, getRandomXP(3, 7), message.author.tag, 0, 0)
+            memberaddXP(message.author.id, getRandomXP(10, 25), message.author.tag, 0, 0, message.guild.id).then( async val => {
                 let r = await ranks.findOne({ guild_id: message.guild.id, rank_id: val[1] });
                 if(r!=undefined && val[1] > 0) {
                     try {

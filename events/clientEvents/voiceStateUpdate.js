@@ -65,8 +65,8 @@ module.exports = {
                 if(v.member.voice.serverMute == true || v.member.voice.selfMute == true) return;
                 let [users, bots] = VCXP.get(v.member.id).members.partition(m => m.user.bot == false);
                 if(users.size>=2) {     
-                    addXP(v.member.id, getRandomXP(1, 15), v.member.user.tag, 0, 0)
-                    memberaddXP(v.member.id, getRandomXP(1, 15), v.member.user.tag, 0, 0, v.guild.id).then(async val => {
+                    addXP(v.member.id, getRandomXP(1, 5), v.member.user.tag, 0, 0)
+                    memberaddXP(v.member.id, getRandomXP(5, 10), v.member.user.tag, 0, 0, v.guild.id).then(async val => {
                         let r = await ranks.findOne({ guild_id: v.guild.id, rank_id: val[1]});
                         if(r!=undefined && val[1] > 0) {
                             try {

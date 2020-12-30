@@ -13,7 +13,7 @@ module.exports = {
         if(!member.hasPermission("MANAGE_ROLES")) {
             const authnoperm = new MessageEmbed()
                 .setColor(errcol)
-                .setDescription("You don\` have the required permissions.");
+                .setDescription("You don\`t have the required permissions.");
             return message.channel.send(authnoperm);
         }
         if(!message.guild.member(client.user.id).hasPermission("MANAGE_ROLES")) {
