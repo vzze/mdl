@@ -9,7 +9,8 @@ module.exports = {
     cooldown: 2,
     premium: "Non-Premium",
     async execute(client, message, args) {
-        const modules = client.modules.filter(m => m != "Owner");
+        let modules = client.modules.filter(m => m != "Owner");
+        if(!serverlist.has(message.guild.id)) modules = modules.filter(m => m != "AutoVC");
         if(!args[0]) {
             const helpembed = new MessageEmbed()
                 .setColor(primarycol)
@@ -18,7 +19,6 @@ module.exports = {
                     modules.map(m => `\`${m}\``)
                         .join(", ") + `\n \u200B \n \`${prefix}help [module]\` for the commands of a module.`
                 )
-                .setFooter('For now AutoVC is locked behind premium, if you want to test it please join the support server.')
             return message.channel.send(helpembed);
         }
         const name = args[0].toLowerCase();
@@ -27,6 +27,7 @@ module.exports = {
             const cmd = client.commands.get(name);
             if(!cmd) return;
             const command = cmd.cmd;
+            if(!serverlist.has(message.guild.id) && command.premium == 'Premium') return;
             const commandhelpembed = new MessageEmbed()
                 .setColor(primarycol)
                 .setTitle(`Command: \`${prefix}${command.name}\``)
@@ -35,7 +36,8 @@ module.exports = {
                 .setFooter(`Cooldown: ${command.cooldown} || ${command.premium}`)
             return message.channel.send(commandhelpembed);
         }
-        const modfilter = client.commands.filter(c => c.module == `${mod}`)
+        let modfilter = client.commands.filter(c => c.module == `${mod}`)
+        if(!serverlist.has(message.guild.id)) modfilter = modfilter.filter(c => c.cmd.premium != 'Premium');
         const moduleembed = new MessageEmbed()
             .setColor(primarycol)
             .addField(`${mod}`, 
