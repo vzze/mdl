@@ -27,26 +27,24 @@ module.exports = {
             if(b) {
                 if(v.member.voice.channelID != b.vc.id) {
                     let a = VCCheker.exec(v, b, prVC, link, sv);
-                    if(a!=42) {
-                        if(a[0] == false) {
-                            if(v.member.id != prVC.findKey(c => c.vc.id == a[1] && c.owner == true)) {
-                                PC2U.exec(a[1], link, v);
-                            }
+                    if(a[0] == false) {
+                        if(v.member.id != prVC.findKey(c => c.vc.id == a[1] && c.owner == true)) {
+                            await PC2U.exec(a[1], link, v);
                         }
-                        if(a[1] == true) {
-                            if(v.member.voice.channelID != null && v.member.voice.channel.parentID == sv.parent) {
-                                prVC.set(v.member.id, {owner: false, vc: v.member.voice.channel});
-                            } else prVC.delete(v.member.id);
+                    }
+                    if(a[1] == true) {
+                        if(v.member.voice.channelID != null && v.member.voice.channel.parentID == sv.parent) {
+                            prVC.set(v.member.id, {owner: false, vc: v.member.voice.channel});
                         }
-                        if(b.owner == false) {
-                            if(v.member.voice.channelID != null && v.member.voice.channel.parentID == sv.parent) {
-                                prVC.set(v.member.id, {owner: false, vc: v.member.voice.channel});
-                            } else prVC.delete(v.member.id);
+                    }
+                    if(b.owner == false) {
+                        if(v.member.voice.channelID != null && v.member.voice.channel.parentID == sv.parent) {
+                            prVC.set(v.member.id, {owner: false, vc: v.member.voice.channel});
                         }
                     }
                 }
             }
-            PC2V.exec(v.member.voice.channelID, link, v);
+            await PC2V.exec(v.member.voice.channelID, link, v);
             if(v.member.voice.channelID == sv.mainvc) CC.exec(v, prVC, link, sv);
         }
 

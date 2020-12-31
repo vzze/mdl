@@ -44,7 +44,3 @@ manager.on("shardCreate", shard => {
 });
 
 manager.spawn(shards);
-
-
-
-

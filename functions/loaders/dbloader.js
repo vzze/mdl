@@ -1,6 +1,5 @@
 const config = require('../../config/config.json');
 const mongoose = require('mongoose');
-const servers = require("../../data/servers");
 const useruser = config.cluseruser;
 const pass = config.clusterpass;
 module.exports.exec = (client) => {
@@ -17,4 +16,3 @@ module.exports.exec = (client) => {
         }
     });
 }
-
