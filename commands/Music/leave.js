@@ -2,12 +2,12 @@ const { MessageEmbed } = require('discord.js')
 const { prefix, primarycol, errcol } = require('../../config/config.json');
 
 module.exports = {
-    name: 'shuffle',
-    description: 'Shuffles the queue.',
-    usage: `\`${prefix}shuffle\``,
+    name: 'leave',
+    description: 'Makes the bot leave the VC.',
+    usage: `\`${prefix}leave\``,
     cooldown: 3,
-    premium: "Non-Premium",
-    execute(client, message, args) {
+    premium: 'Non-Premium',
+    async execute(client, message, args) {
         let memch = message.guild.member(message.author).voice.channelID;
 
         if(memch == null) {
@@ -25,10 +25,6 @@ module.exports = {
                 return message.channel.send(diffvc);
             }
         }
-        client.player.shuffle(message);
-        let shq = new MessageEmbed()
-            .setDescription('Shuffling the queue...')
-            .setColor(primarycol)
-        message.channel.send(shq);
+        message.guild.member(client.user).voice.setChannel(null);
     }
 }
