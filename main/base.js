@@ -72,6 +72,12 @@ class MDL extends Client {
                 .setColor(errcol)
             message.channel.send(nores);
         })
+        .on('queueEnd', (message, queue) => {
+            let qe = new MessageEmbed()
+                .setDescription("The queue has ended.")
+                .setColor(primarycol)
+            message.channel.send(qe);
+        })
 
         .on('error', (error, message) => {
             switch(error){
