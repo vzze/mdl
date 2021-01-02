@@ -1,7 +1,7 @@
 const users = require('../../data/users');
 const lvls = require('../../config/levels.json');
 
-module.exports = async (id, amount, name, checker, newlvl) => {
+module.exports = async (id, amount, name) => {
     let newlevel = 0;
     var query = { user_id: id }
     const u = await users.findOne(query);

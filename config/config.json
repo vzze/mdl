@@ -9,5 +9,6 @@
 	"owners": [214673720101437440],
 	"primarycol": "#fffffe",
 	"errcol": "#dd4545",
-	"shards": 2
+	"shards": 2,
+	"filters": ["8D", "gate", "haas", "phaser", "treble", "tremolo", "vibrato", "reverse", "karaoke", "flanger", "mcompand", "pulsator", "subboost", "bassboost", "vaporwave", "nightcore", "normalizer", "surrounding"]
 }

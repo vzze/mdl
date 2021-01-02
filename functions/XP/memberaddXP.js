@@ -1,7 +1,7 @@
 const members = require("../../data/guildusers");
 const lvls = require('../../config/levels.json');
 
-module.exports = async (id, amount, name, checker, newlvl, gid) => {
+module.exports = async (id, amount, name, gid) => {
     let levelupchecker = 0;
     let newlevel = 0;
     var query = { user_id: id, guild_id: gid }

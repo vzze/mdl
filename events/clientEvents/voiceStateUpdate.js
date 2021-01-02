@@ -28,7 +28,7 @@ module.exports = {
                 if(v.member.voice.channelID != b.vc.id) {
                     let a = VCCheker.exec(v, b, prVC, link, sv);
                     if(a[0] == false) {
-                        if(v.member.id != prVC.findKey(c => c.vc.id == a[1] && c.owner == true)) {
+                        if(v.member.id != await prVC.findKey(c => c.vc.id == a[1] && c.owner == true)) {
                             await PC2U.exec(a[1], link, v);
                         }
                     }
@@ -44,8 +44,9 @@ module.exports = {
                     }
                 }
             }
-            await PC2V.exec(v.member.voice.channelID, link, v);
+            if(v.member.voice.channelID != null) await PC2V.exec(v.member.voice.channelID, link, v);
             if(v.member.voice.channelID == sv.mainvc) CC.exec(v, prVC, link, sv);
+            if(v.member.voice.channelID == null) prVC.delete(v.member.id)
         }
 
         if(VCXP.has(v.member.id)) return;
@@ -63,8 +64,8 @@ module.exports = {
                 if(v.member.voice.serverMute == true || v.member.voice.selfMute == true) return;
                 let [users, bots] = VCXP.get(v.member.id).members.partition(m => m.user.bot == false);
                 if(users.size>=2) {     
-                    addXP(v.member.id, getRandomXP(1, 5), v.member.user.tag, 0, 0)
-                    memberaddXP(v.member.id, getRandomXP(5, 10), v.member.user.tag, 0, 0, v.guild.id).then(async val => {
+                    addXP(v.member.id, getRandomXP(1, 5), v.member.user.tag)
+                    memberaddXP(v.member.id, getRandomXP(5, 10), v.member.user.tag, v.guild.id).then(async val => {
                         let r = await ranks.findOne({ guild_id: v.guild.id, rank_id: val[1]});
                         if(r!=undefined && val[1] > 0) {
                             try {
