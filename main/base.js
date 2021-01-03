@@ -14,10 +14,7 @@ class MDL extends Client {
         this.config = require('../config/config.json');
 
         this.player = new Player(this, {
-            leaveOnEnd: false,
-            leaveOnStop: false,
-            leaveOnEmpty: true,
-            autoSelfDeaf: true,
+            autoSelfDeaf: true
         })
 
         this.player
