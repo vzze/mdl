@@ -31,13 +31,11 @@ module.exports = {
             return message.channel.send(notvc);
         }
 
-        if(client.player.isPlaying(message)) {
-            if(message.guild.member(client.user).voice.channelID != memch) {
-                let diffvc = new MessageEmbed()
-                    .setDescription('You are not connected to the same voice channel.')
-                    .setColor(errcol)
-                return message.channel.send(diffvc);
-            }
+        if(message.guild.me.voice.channel  && message.guild.member(client.user).voice.channelID != memch) {
+            let diffvc = new MessageEmbed()
+                .setDescription('You are not connected to the same voice channel.')
+                .setColor(errcol)
+            return message.channel.send(diffvc);
         }
         
         let string = "";
