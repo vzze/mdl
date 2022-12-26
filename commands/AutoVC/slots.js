@@ -1,30 +1,26 @@
-const { MessageEmbed } = require("discord.js")
-const { prefix, errcol } = require("../../config/config.json");
-const { vccoll, linker } = require("../../events/clientEvents/voiceStateUpdate")
-const { serverlist } = require("../../events/clientEvents/ready");
+const { MessageEmbed } = require("discord.js-light");
 
 module.exports = {
-    name: `slots`,
-    description: `Changes the slots of your VC.`,
-    usage: `\`${prefix}slots\``,
+    name: 'slots',
+    aliases: ['sl'],
+    description: 'Changes the amount of slots your VC has.',
+    usage: ['slots <0-99>'],
     cooldown: 3,
     premium: "Premium",
-    async execute(client, message, args) {
-        if(!serverlist.has(message.guild.id)) return;
+    async execute(mdl, message, args) {
         if(!args[0]) return;
         if(isNaN(args[0])) return;
-        let check = await vccoll.get(message.author.id);
-        if(!check) return;
-        if(check.owner==false) return;
-        let chan = check.vc;
-        let txtchan = linker.get(chan.id);
-        try {
-        await chan.setUserLimit(args[0])
-        } catch (e) {
-            let errem = new MessageEmbed()
-                .setDescription("Encountered an error while trying to change the slots.")
-                .setColor(errcol)
-            if(txtchan) txtchan.send(errem);
-        }
+        const member = await message.guild.members.fetch(message.author.id, { cache: false });
+        const vc = mdl.vcowners.get(member.user.id);
+        if(!vc) return;
+        if(member.voice.channelID != vc) return;
+        let string = "";
+        args.forEach(word => string += word + " ");
+        string.trim();
+        const chan = await message.guild.channels.fetch(vc, { cache: false });
+        chan.setUserLimit(args[0])
+            .catch(e => message.channel.send(new MessageEmbed()
+                .setColor(mdl.config.errcol)
+                .setDescription("``` Caught an error. ```")));
     }
 }

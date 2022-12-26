@@ -1,74 +1,60 @@
-const { serverlist } = require("../../events/clientEvents/ready");
-const servers = require("../../data/servers");
-const { MessageEmbed } = require(`discord.js`);
-const {prefix, errcol, primarycol} = require('../../config/config.json');
-const deepai = require('deepai');
+const { MessageEmbed } = require("discord.js-light");
 
 module.exports = {
     name: 'servercard',
-    description: 'Sets up the servers custom rank card! Put the value 0 to remove it.',
-    usage: `\`${prefix}servercard\` <ImgurLink> \n \`${prefix}servercard\` 0`,
+    aliases: ['svc', 'svcard', 'serverc'],
+    description: 'Sets the servers default level card.',
+    usage: ['svc <Imgur Link>', 'svcard remove'],
     cooldown: 5,
     premium: "Premium",
-    async execute(client, message, args) {
-        if(!serverlist.has(message.guild.id)) return;
-        const target = message.author;
-        const member = message.guild.member(target);
-        if(!member.hasPermission("MANAGE_GUILD")) {
-            const authnoperm = new MessageEmbed()
-                .setColor(errcol)
-                .setDescription("You don\` have the required permissions.");
-            return message.channel.send(authnoperm);
+    async execute(mdl, message, args) {
+        const member = await message.guild.members.fetch(message.author.id, { cache: false });
+        if(!member.hasPermission("MANAGE_GUILD") && !member.hasPermission("ADMINISTRATOR")) {
+            return message.channel.send(new MessageEmbed()
+                .setDescription("``` You don\`t have permissions to manage roles. ```")
+                .setColor(mdl.config.errcol))
         }
         if(!args[0]) {
-            let r = new MessageEmbed()
-                .setDescription('You need to mention the Imgur Link')
-                .setColor(errcol);
-            return message.channel.send(r);
+            return message.channel.send(new MessageEmbed()
+                .setColor(mdl.config.errcol)
+                .setDescription("``` You must provide an Imgur link. ```"));
         }
-        if(args[0] == '0') {
-            let g = await servers.findOne({guild_id: message.guild.id});
-            await g.updateOne({defaultlevelimage: `${args[0]}`});
-            await g.save();
-            let ok = new MessageEmbed()
-                .setDescription("Removed your server card banner.")
-                .setColor(primarycol)
-            message.channel.send(ok);
-            serverlist.set(message.guild.id, {parent: g.autovcparent, mainvc: g.autovcchannel, whitelist: g.whitelisterolevc, defaultlevelimage: `${args[0]}`});
-            return;
+        if(args[0] == "remove") {
+            const c = await mdl.db.servers.findOne({ guild_id: `${message.guild.id}` });
+            await c.updateOne({ defaultlevelimage: 0 });
+            let obj = mdl.pservers.get(message.guild.id);
+            obj.svcard = 0;
+            mdl.pservers.set(message.guild.id, obj);
+            return message.channel.send(new MessageEmbed()
+                .setColor(mdl.config.pcol)
+                .setDescription("``` Removed custom server card. ```"));
         }
-        if(args[0].indexOf("imgur")!=-1) {
-            if(args[0].indexOf(".png")!=-1 || args[0].indexOf(".jpg")!=-1 || args[0].indexOf(".jpeg")!=-1) {
-                deepai.setApiKey('3735ad30-254c-40d8-9b50-ce0cfb3f4707');
-                var resp = await deepai.callStandardApi("nsfw-detector", {
-                        image: `${args[0]}`,
+        if(args[0].indexOf("imgur.com") == -1) {
+            return message.channel.send(new MessageEmbed()
+                .setColor(mdl.config.errcol)
+                .setDescription("``` Must be an Imgur link. ```"))
+        }
+        if(args[0].endsWith(".png") || args[0].endsWith(".jpg") || args[0].endsWith(".jpeg")) {
+            const u = await mdl.db.servers.findOne({ guild_id: message.guild.id });
+            await u.updateOne({ defaultlevelimage: `${args[0]}` })
+                .then(() => {
+                    let obj = mdl.pservers.get(message.guild.id);
+                    obj.svcard = args[0];
+                    mdl.pservers.set(message.guild.id, obj);
+                    message.channel.send(new MessageEmbed()
+                        .setColor(mdl.config.pcol)
+                        .setDescription("``` Succesfully updated server rank card. ```"));
+                })
+                .catch(e => {
+                    message.channel.send(new MessageEmbed()
+                        .setColor(mdl.config.errcol)
+                        .setDescription("``` Caught an error. ```"));
                 });
-                let nsfwcheck = resp.output.nsfw_score;
-                if(nsfwcheck >= 0.6) {
-                    const nsfwdembed = new MessageEmbed()
-                        .setColor(errcol)
-                        .setDescription(`**Image is not safe for work.**`)
-                    return message.channel.send(nsfwdembed);
-                }
-            } else {
-                let r = new MessageEmbed()
-                .setDescription('Must be the image adress.')
-                .setColor(errcol);
-            return message.channel.send(r);
-            }
+            await u.save();
         } else {
-            let r = new MessageEmbed()
-                .setDescription('Must be an Imgur Link.')
-                .setColor(errcol);
-            return message.channel.send(r);
+            message.channel.send(new MessageEmbed()
+                .setColor(mdl.config.errcol)
+                .setDescription("``` Must be the image adress. ```"))
         }
-        let g = await servers.findOne({guild_id: message.guild.id});
-        await g.updateOne({defaultlevelimage: `${args[0]}`});
-        await g.save();
-        let ok = new MessageEmbed()
-            .setDescription("Uploaded server card banner!")
-            .setColor(primarycol)
-        message.channel.send(ok);
-        serverlist.set(message.guild.id, {parent: g.autovcparent, mainvc: g.autovcchannel, whitelist: g.whitelisterolevc, defaultlevelimage: `${args[0]}`});
     }
 }

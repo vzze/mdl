@@ -1,17 +1,15 @@
-const { MessageEmbed } = require(`discord.js`);
-const {prefix, primarycol} = require('../../config/config.json')
+const { MessageEmbed } = require("discord.js-light");
 
 module.exports = {
     name: 'invite',
-    description: 'Sends a message with a hyper link to invite the bot.',
-    usage: `\`${prefix}invite\``,
-    cooldown: 3,
+    aliases: ['inv'],
+    description: 'Gives an invite link so you can invite the bot!',
+    usage: ['invite'],
+    cooldown: 2,
     premium: "Non-Premium",
-    async execute(client, message, args) {
-        const l4embed = new MessageEmbed()
-            .setColor(primarycol)
-            .setAuthor(`Server Invite`, `${message.client.user.displayAvatarURL()}`)
-            .setDescription(`To Invite me to your server [click here](https://discord.com/api/oauth2/authorize?client_id=776551374380204033&permissions=8&scope=bot).`)
-        message.channel.send(l4embed);
+    execute(mdl, message, args) {
+        message.channel.send(new MessageEmbed()
+            .setColor(mdl.config.pcol)
+            .setDescription("To Invite me to your server [click here](https://discord.com/api/oauth2/authorize?client_id=776551374380204033&permissions=8&scope=bot)."));
     }
 }

@@ -1,55 +1,20 @@
-const { MessageEmbed, MessageAttachment, DiscordAPIError } = require(`discord.js`);
-const {prefix, primarycol, errcol} = require('../../config/config.json');
-const users = require('../../data/users');
-const members = require('../../data/guildusers');
-const { lvl } = require('../../config/levels.json');
+const { MessageAttachment } = require("discord.js-light");
 const Canvas = require("canvas");
-const { serverlist } = require("../../events/clientEvents/ready");
 
 module.exports = {
-	name: 'level',
-	description: 'Shows a users level.',
-    usage: `\`${prefix}level\` \n \`${prefix}level\` <User>`,
+    name: 'level',
+    aliases: ['lvl'],
+    description: 'Displays your level / A users level.',
+    usage: ['level', 'level <Target>'],
     cooldown: 3,
     premium: "Non-Premium",
-    async execute(client, message, args) {
-        if(!message.guild.member(client.user.id).hasPermission("ATTACH_FILES")) {
-            const noelembed = new MessageEmbed()
-                .setColor(errcol)
-                .setDescription(`**I don\'t have permissions to send images.**`)
-           return message.channel.send(noelembed);
-        }
+    async execute(mdl, message, args) {
         const target = message.mentions.users.first() || message.author;
-        let u = await users.findOne({ user_id: target.id });
-        let m = await members.findOne({ user_id: target.id, guild_id: message.guild.id });
-        if(u==undefined) {
-            const newU = new users({
-                user_id: target.id, 
-                xp: 0, 
-                level: 0, 
-                user_name: `${target.tag}`,
-                rankcardlink: 0,
-                rankavatar: 1,
-                prcolor: "0",
-                seccolor: "0",
-                quote: "0"
-            });
-            await newU.save();
-            u = newU;
-            setTimeout(() => {}, 1000);
-        }
-        if(m==undefined) {
-            const newM = new members({
-                user_id: target.id,
-                guild_id: message.guild.id,
-                user_name: `${target.tag}`,
-                xp: 0,
-                level: 0,
-            })
-            await newM.save();
-            m = newM;
-            setTimeout(() => {}, 1000);
-        }
+
+        let u = await mdl.db.users.findOne({ user_id: target.id });
+        let m = await mdl.db.members.findOne({ user_id: target.id, guild_id: message.guild.id });
+        if(!u) u = await mdl.db.createnewuser(target.id, 0, target.tag)
+        if(!m) m = await mdl.db.createnewmember(target.id, message.guild.id, target.tag);
 
         let globalxp = u.xp;
         let localxp = m.xp;
@@ -57,23 +22,23 @@ module.exports = {
         let globallevel = u.level;
         let locallevel = m.level;
 
-        let globalrequiredxp = lvl[globallevel];
-        let localrequiredxp = lvl[locallevel];
+        let globalrequiredxp = mdl.config.lvl[globallevel];
+        let localrequiredxp = mdl.config.lvl[locallevel];
 
         let actualglobalxp = globalxp;
         let actuallocalxp = localxp;
 
         if(globallevel >= 1) {
-            actualglobalxp = globalxp - lvl[globallevel-1];
-            globalrequiredxp = globalrequiredxp - lvl[globallevel-1];
+            actualglobalxp = globalxp - mdl.config.lvl[globallevel-1];
+            globalrequiredxp = globalrequiredxp - mdl.config.lvl[globallevel-1];
         }
         if(locallevel >= 1) {
-            actuallocalxp = localxp - lvl[locallevel-1];
-            localrequiredxp = localrequiredxp - lvl[locallevel-1];
+            actuallocalxp = localxp - mdl.config.lvl[locallevel-1];
+            localrequiredxp = localrequiredxp - mdl.config.lvl[locallevel-1];
         }
 
-        let globalpercentage = Math.floor((actualglobalxp*100)/globalrequiredxp)/100;
-        let localpercentage = Math.floor((actuallocalxp*100)/localrequiredxp)/100;
+        let globalpercentage = Math.floor((actualglobalxp*100)/globalrequiredxp)/100-0.05;
+        let localpercentage = Math.floor((actuallocalxp*100)/localrequiredxp)/100-0.05;
 
         if(actualglobalxp >= 1000) {
             actualglobalxp = `${Math.floor(actualglobalxp/1000)}` + `.${Math.floor(actualglobalxp/100)%10}` + "K";
@@ -92,15 +57,13 @@ module.exports = {
         }
 
         const { registerFont } = require('canvas');
-        registerFont('./data/bahnschrift.ttf', { family: "Bahnschrift" });
+        registerFont('./config/bahnschrift.ttf', { family: "Bahnschrift" });
 
         var canvas = Canvas.createCanvas(934, 282)
         const ctx = canvas.getContext('2d');
 
-        let text = `${target.username}`;
-
         let primarycolor = "#C069FF";
-        let secondarycolor = "#000000";
+        let secondarycolor = "#FFFFFF";
         let quote = "";
 
         if(u.prcolor != "0") primarycolor = u.prcolor;
@@ -115,25 +78,20 @@ module.exports = {
         ctx.closePath();
         ctx.clip();
 
-        let imlink = u.rankcardlink;
-        if(imlink!=0) {
-            const specialbackground = await Canvas.loadImage(`${imlink}`)
-            ctx.drawImage(specialbackground, 0, 0, canvas.width, canvas.height);
-        } else {
-            let sv = serverlist.get(message.guild.id)
-            if(sv) {
-                if(sv.defaultlevelimage != '0') {
-                    const svbackground = await Canvas.loadImage(`${sv.defaultlevelimage}`);
-                    ctx.drawImage(svbackground, 0, 0, canvas.width, canvas.height);
-                } else {
-                    const background = await Canvas.loadImage('./data/levelcarddata/mandemcard.png');
-                    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-                }
-            } else {
-                const background = await Canvas.loadImage('./data/levelcarddata/mandemcard.png');
-                ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-            }
-            
+        ctx.fillStyle = "#202225"
+        ctx.fillRect(0, 0, 934, 282)
+        let text = `${target.username}`;
+        if(u.rankcardlink!=0) {
+            try {
+                const specialbackground = await Canvas.loadImage(`${u.rankcardlink}`)
+                ctx.drawImage(specialbackground, 0, 0, canvas.width, canvas.height);
+            } catch (e) {}  
+        } else if(mdl.pservers.has(message.guild.id)) {
+            const sv = mdl.pservers.get(message.guild.id);
+            try {
+                const lol = await Canvas.loadImage(`${sv.svcard}`);
+                ctx.drawImage(lol, 0, 0, canvas.width, canvas.height);
+            } catch (e) {}
         }
 
 
@@ -179,8 +137,8 @@ module.exports = {
         if(u.rankavatar == 1) {
             ctx.beginPath();
             ctx.arc(467, 141, 82, 0, 2 * Math.PI);
-            ctx.lineWidth = 8;
-            ctx.strokeStyle = `${secondarycolor}`;
+            ctx.lineWidth = 7;
+            ctx.strokeStyle = `#000000`;
             ctx.stroke();
         }
 
@@ -200,40 +158,39 @@ module.exports = {
 
         let gradient2 = ctx.createLinearGradient(49, 0, 339, 0);
 
-        gradient2.addColorStop(localpercentage-0.05,`${primarycolor}`)
-        gradient2.addColorStop(localpercentage+0.05, `${secondarycolor}`)
+        gradient2.addColorStop(localpercentage,`${primarycolor}`)
+        gradient2.addColorStop(localpercentage, `#36393f`)
+
+        let lpx = Math.floor(290*localpercentage) + 49;
 
         ctx.beginPath();
         ctx.fillStyle = gradient2;
         ctx.fillRect(49, 124, 290, 34);
+        ctx.arc(lpx, 141, 17, Math.PI * 1.5, Math.PI * (-0.5), true);
+        ctx.fillStyle = `${primarycolor}`
+        ctx.fill();
         ctx.closePath();
         
         let gradient = ctx.createLinearGradient(595, 0, 885, 0);
 
-        gradient.addColorStop(globalpercentage-0.05,`${primarycolor}`)
-        gradient.addColorStop(globalpercentage+0.05, `${secondarycolor}`)
+
+        gradient.addColorStop(globalpercentage,`${primarycolor}`)
+        gradient.addColorStop(globalpercentage, `#36393f`)
+
+        let gpx = Math.floor(290*globalpercentage) + 595;
 
         ctx.beginPath();
         ctx.fillStyle = gradient;
         ctx.fillRect(595, 124, 290, 34);
+        ctx.arc(gpx, 141, 17, Math.PI * 1.5, Math.PI * (-0.5), true);
+        ctx.fillStyle = `${primarycolor}`
+        ctx.fill();
         ctx.closePath();
 
         if(u.rankavatar == 1) {
             let avatar = await Canvas.loadImage(target.displayAvatarURL({ format: 'jpg' }));
             ctx.drawImage(avatar, 387, 61, 160, 160);
         }
-
-        let globe = await Canvas.loadImage('./data/levelcarddata/globe2.png');
-        ctx.drawImage(globe, 0, 0, canvas.width, canvas.height);
-        if(message.guild.iconURL() != null) {
-            ctx.beginPath();
-            ctx.arc(66, 141, 17, 0, Math.PI * 2, true);
-            ctx.closePath();
-            ctx.clip();
-            let guild = await Canvas.loadImage(message.guild.iconURL({ format: 'jpg'}));
-            ctx.drawImage(guild, 49, 124, 34, 34);
-        }
-        
 
         const attachment = new MessageAttachment(canvas.toBuffer(), `${target.id}.png`);
 

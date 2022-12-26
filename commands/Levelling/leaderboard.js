@@ -1,91 +1,58 @@
-const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
-const {prefix, primarycol, errcol} = require('../../config/config.json')
-const members = require("../../data/guildusers");
+const { MessageEmbed } = require("discord.js-light");
 
 module.exports = {
-	name: 'leaderboard',
-	description: 'Displays the local leaderboard.',
-    usage: `\`${prefix}leaderboard\` \n \`${prefix}leaderboard\` 5`,
-    cooldown: 4,
+    name: 'leaderboard',
+    aliases: ['lb', 'levels'],
+    description: 'Displays the servers leaderboard.',
+    usage: ['leaderboard'],
+    cooldown: 3,
     premium: "Non-Premium",
-    async execute(client, message, args) {
-        if(!args[0]) {
-            try {
-                const u = await members.find({ guild_id: message.guild.id});
-                u.sort((a, b) => b.xp - a.xp)
-                const uarray = Array.from(u);
-                const leadembed = new MessageEmbed()
-                        .setColor(primarycol)
-                        .setTitle(`${message.guild.name} Leaderboard`)
-                        .setURL("https://discord.com/invite/FAARS2NdjE")
-                        .addField('Top 10',
-                            uarray.slice(0, 10)
-                                .map((user, position) => `**${position + 1}**. \`${user.user_name}\``)
-                                .join('\n'), true
-                        )
-                        .addField('Level',
-                        uarray.slice(0, 10)
-                                .map((user) => `\`${user.level}\``)
-                                .join('\n'), true
-                        )
-                        .addField('XP',
-                        uarray.slice(0, 10)
-                                .map((user) => `\`${user.xp}\``)
-                                .join('\n'), true
-                        )
-                    message.channel.send(leadembed)
-            } catch (e) {
-                const err3embed = new MessageEmbed()
-                    .setColor(errcol)
-                    .setDescription(`**No users have talked for a leaderboard to be generated.**`)
-                message.channel.send(err3embed);
-            } 
-        } else {
-            if(!isNaN(args[0])) {
-                if(args[0] >= 1 && args[0] <= 30) {
-                    args[0] = Math.floor(args[0]);
-                    try {
-                        const u = await members.find({ guild_id: message.guild.id});
-                        u.sort((a, b) => b.xp - a.xp)
-                        const uarray = Array.from(u);
-                        const leadembed = new MessageEmbed()
-                                .setColor(primarycol)
-                                .setTitle(`${message.guild.name} Leaderboard`)
-                                .setURL("https://discord.com/invite/FAARS2NdjE")
-                                .addField(`Top ${args[0]}`,
-                                uarray.slice(0, args[0])
-                                        .map((user, position) => `**${position + 1}**. \`${user.user_name}\``)
-                                        .join('\n'), true
-                                )
-                                .addField('Level',
-                                uarray.slice(0, args[0])
-                                        .map((user) => `\`${user.level}\``)
-                                        .join('\n'), true
-                                )
-                                .addField('XP',
-                                uarray.slice(0, args[0])
-                                        .map((user) => `\`${user.xp}\``)
-                                        .join('\n'), true
-                                )
-                            message.channel.send(leadembed)
-                    } catch (e) {
-                        const err3embed = new Discord.MessageEmbed()
-                            .setColor(errcol)
-                            .setDescription(`**No users have talked for a leaderboard to be generated.**`)
-                        message.channel.send(err3embed);
-                    }
+    async execute(mdl, message, args) {
+            const u = await mdl.db.members.find({ guild_id: message.guild.id});
+            u.sort((a, b) => b.xp - a.xp)
+            const uarray = Array.from(u);
+            const topmem = uarray.slice(0, 20);
+
+            const half = Math.floor(topmem.length/2);
+            const header = "U                  L :: XP    | U                  L :: XP\n";
+            let mainbody = "";
+
+            for(var i = 0; i < half; i++) {
+                let string = "";
+                if(topmem[i].user_name.length>13) {
+                    if(i==9) string = `${i+1} ${topmem[i].user_name.replace(/[^\w\s]/gi, '').slice(0, topmem[i].user_name.length-5).slice(0, 13)}`;
+                    else string = `${i+1}  ${topmem[i].user_name.replace(/[^\w\s]/gi, '').slice(0, topmem[i].user_name.length-5).slice(0, 13)}`;
                 } else {
-                    const err3embed = new Discord.MessageEmbed()
-                        .setColor(errcol)
-                        .setDescription(`**Must be inbetween 1 and 30.**`)
-                    message.channel.send(err3embed);
+                    if(i==9) string = `${i+1} ${topmem[i].user_name.replace(/[^\w\s]/gi, '').slice(0, topmem[i].user_name.length-5)}`;
+                    else string = `${i+1}  ${topmem[i].user_name.replace(/[^\w\s]/gi, '').slice(0, topmem[i].user_name.length-5)}`;
                 }
-            } else {
-                const err2embed = new Discord.MessageEmbed()
-                    .setColor(errcol)
-                    .setDescription(`**Must be a number**`)
-                message.channel.send(err2embed);
+                
+                while(string.length<18) string += " ";
+                string += `${topmem[i].level}`;
+                while(string.length<23) string += " ";
+                (topmem[i].xp>1000) ? string += topmem[i].xp = Math.round(topmem[i].xp/1000) + "K" : string += topmem[i].xp;
+                while(string.length<30) string += " ";
+                string += "|";
+                let exstring = string.length;
+
+                if(topmem[i+half].user_name.length>13) {
+                    if(i+half+1>9) string += ` ${i+half+1} ${topmem[i+half].user_name.replace(/[^\w\s]/gi, '').slice(0, topmem[i+half].user_name.length-5).slice(0, 13)}`;
+                    else string += ` ${i+half+1}  ${topmem[i+half].user_name.replace(/[^\w\s]/gi, '').slice(0, topmem[i+half].user_name.length-5).slice(0, 13)}`;
+                } else {
+                    if(i+half+1>9) string += ` ${i+half+1} ${topmem[i+half].user_name.replace(/[^\w\s]/gi, '').slice(0, topmem[i+half].user_name.length-5)}`;
+                    else string += ` ${i+half+1}  ${topmem[i+half].user_name.replace(/[^\w\s]/gi, '').slice(0, topmem[i+half].user_name.length-5)}`;
+                }
+                while(string.length<19+exstring) string += " ";
+                string += `${topmem[i+half].level}`;
+                while(string.length<24+exstring) string += " ";
+                (topmem[i+half].xp>1000) ? string += topmem[i+half].xp = Math.round(topmem[i+half].xp/1000) + "K" : string += topmem[i+half].xp;
+
+                mainbody += string + "\n";
             }
-        }
+            message.channel.send(new MessageEmbed()
+                .addField("Global Leaderboard","```prolog\n" + header + mainbody + "```")
+                .setColor(mdl.config.pcol) 
+            )
     }
+
 }

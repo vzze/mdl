@@ -1,80 +1,81 @@
-const { MessageEmbed, DiscordAPIError} = require(`discord.js`);
-const {prefix, primarycol, errcol} = require('../../config/config.json');
-const ranks = require("../../data/ranks");
+const { MessageEmbed } = require("discord.js-light");
 
 module.exports = {
     name: 'linkrole',
-    description: "Links a role to a level.",
-    usage: `\`${prefix}linkrole\` <RoleID> <Level> \n \`${prefix}linkrole\` 774601811428114432 5`,
-    cooldown: 3,
+    aliases: ['lr', 'lrole'],
+    description: 'Links a role to a level. To remove a linked role just delete it.',
+    usage: ['linkrole <RoleID> <Level>'],
+    cooldown: 2,
     premium: "Non-Premium",
-    async execute(client, message, args) {
-        if(!message.guild.member(client.user.id).hasPermission("MANAGE_ROLES")) {
-            const noelembed = new MessageEmbed()
-                .setColor(errcol)
-                .setDescription(`**I don\'t have permissions to manage roles.**`)
-            return message.channel.send(noelembed);
+    async execute(mdl, message, args) {
+        if(!args[0] || !args[1]) return;
+        args[1] = Math.floor(args[1]);
+        await message.guild.roles.fetch();
+        const member = await message.guild.members.fetch(message.author.id, { cache: false });
+        if(!member.hasPermission("MANAGE_ROLES") && !member.hasPermission("ADMINISTRATOR")) {
+            message.guild.roles.cache.clear();
+            return message.channel.send(new MessageEmbed()
+                .setDescription("``` You don\`t have permissions to manage roles. ```")
+                .setColor(mdl.config.errcol))
         }
-        const target = message.author;
-        const member = message.guild.member(target);
-        if(member.hasPermission("MANAGE_ROLES")) {
-            if(args[0]) {
-                if(args[1]) {
-                    if(!isNaN(args[1]) && args[1] >= 1 && args[1] <= 100) {
-                        var ok = 1;
-                        try {
-                            let roleadd  = await message.guild.roles.cache.get(`${args[0]}`);
-                            if(roleadd) {
-                                const newLinkedRole = new ranks({
-                                    guild_id: `${message.guild.id}`,
-                                    rank_id: args[1],
-                                    role_id: `${args[0]}`
-                                });
-                                newLinkedRole.save();
-                            } else {
-                                const elembed = new MessageEmbed()
-                                    .setColor(errcol)
-                                    .setDescription(`**Role does not exist.**`)
-                                message.channel.send(elembed);
-                                ok = 0;
-                            }
-                        } catch (e) {
-                            const elembed = new MessageEmbed()
-                                .setColor(errcol)
-                                .setDescription(`**Caught an error.**`)
-                            message.channel.send(elembed);
-                            ok = 0;
-                       }
-  
-                        if(ok==1) {
-                            const el2embed = new MessageEmbed()
-                                .setColor(primarycol)
-                                .setDescription(`**Linked role successfully.**`)
-                            message.channel.send(el2embed);
-                        }
-                    } else {
-                        const el5embed = new MessageEmbed()
-                            .setColor(errcol)
-                            .setDescription(`**Must be a number and must be inbetween 1-100.**`)
-                        message.channel.send(el5embed);
-                    }
-                } else {
-                    const el4embed = new MessageEmbed()
-                        .setColor(errcol)
-                        .setDescription(`**Must mention the position (level) for the role.**`)
-                    message.channel.send(el4embed);
+        if(isNaN(args[1])) {
+            message.guild.roles.cache.clear();
+            return message.channel.send(new MessageEmbed()
+                .setDescription("``` Level must be a number ```")
+                .setColor(mdl.config.errcol));
+        }
+        if(args[1] < 1 || args[1] > 150) {
+            message.guild.roles.cache.clear();
+            return message.channel.send(new MessageEmbed()
+                .setDescription("``` Level must be inbetween 1 and 150 ```")
+                .setColor(mdl.config.errcol))
+        }
+        await message.guild.roles.fetch(args[0], { cache: false })
+            .then(async r => {
+                if(!r.editable) {
+                    return message.channel.send(new MessageEmbed()
+                        .setDescription("``` I cannot access that role. ```")
+                        .setColor(mdl.config.errcol));
                 }
-            } else {
-                const el3embed = new MessageEmbed()
-                    .setColor(errcol)
-                    .setDescription(`**Must mention the role ID.**`)
-                message.channel.send(el3embed);
-            }
-        } else {
-            const el3embed = new MessageEmbed()
-                .setColor(errcol)
-                .setDescription(`**You must be able to manage roles.**`)
-            message.channel.send(el3embed);
-        }
+                message.guild.roles.cache.clear();
+                const c = await mdl.db.ranks.findOne({ guild_id: `${message.guild.id}`, role_id: r.id });
+                if(c) {
+                    await c.updateOne({ rank_id: args[1] });
+                    await c.save()
+                        .then(() => {
+                            return message.channel.send(new MessageEmbed()
+                                .setDescription("```prolog\n" + `Linked Role :: ${r.name}\nLevel       :: ${args[1]}\n` + "```")
+                                .setColor(mdl.config.pcol))
+                        })
+                        .catch(e => {
+                            return message.channel.send(new MessageEmbed()
+                                .setDescription("``` Encountered an error. ```")
+                                .setColor(mdl.config.errcol))
+                        })
+                } else {
+                    const newr = new mdl.db.ranks({
+                        guild_id: `${message.guild.id}`,
+                        rank_id: args[1],
+                        role_id: `${r.id}`
+                    });
+                    await newr.save()
+                        .then(() => {
+                            return message.channel.send(new MessageEmbed()
+                                .setDescription("```prolog\n" + `Linked Role :: ${r.name}\nLevel       :: ${args[1]}\n` + "```")
+                                .setColor(mdl.config.pcol))
+                        })
+                        .catch(e => {
+                            return message.channel.send(new MessageEmbed()
+                                .setDescription("``` Encountered an error. ```")
+                                .setColor(mdl.config.errcol))
+                        })
+                }
+            }).catch(e => {
+                message.guild.roles.cache.clear();
+                return message.channel.send(new MessageEmbed()
+                    .setDescription("``` Role does not exist. ```")
+                    .setColor(mdl.config.errcol))
+            })
     }
+
 }

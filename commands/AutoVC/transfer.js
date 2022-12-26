@@ -1,49 +1,22 @@
-const { vccoll, linker } = require("../../events/clientEvents/voiceStateUpdate");
-const { prefix, primarycol, errcol } = require("../../config/config.json");
-const { MessageEmbed } = require("discord.js");
-const { serverlist } = require("../../events/clientEvents/ready");
+const { MessageEmbed } = require("discord.js-light");
 
 module.exports = {
-    name: "transfer",
-    description: "Transfers the ownership.",
-    usage: `\`${prefix} transfer\` <User>`,
+    name: 'transfer',
+    aliases: ['tran'],
+    description: 'Transfers the ownership to someone else.',
+    usage: ['transfer <User>'],
     cooldown: 3,
     premium: "Premium",
-    async execute(client, message, args) {
-        if(!serverlist.has(message.guild.id)) return;
-        let check = vccoll.get(message.author.id);
-        if(!check) return;
-        if(check.owner==false) return;
-        let target = message.mentions.users.first();
-        let chan = check.vc;
-        const member = message.guild.member(target);
-        let txtchan = linker.get(chan.id)
-        if(member.voice.channelID != chan.id) {
-            if(txtchan) {
-                let no = new MessageEmbed()
-                    .setDescription(`<@${target.id}> is not in your voice channel.`)
-                    .setColor(errcol)
-                return txtchan.send(no);
-            } else {
-                let no = new MessageEmbed()
-                    .setDescription(`<@${target.id}> is not in your voice channel.`)
-                    .setColor(errcol)
-                return message.channel.send(no);
-            }
-            
-        }
-        vccoll.set(target.id, {owner: true, vc: chan});
-        vccoll.set(message.author.id, { owner: false, vc: chan});
-        if(txtchan) {
-            let tranem = new MessageEmbed()
-                .setDescription(`Ownership transferred to <@${target.id}>`)
-                .setColor(primarycol)
-            txtchan.send(tranem);
-        } else {
-            let tranem = new MessageEmbed()
-                .setDescription(`Ownership transferred to <@${target.id}>`)
-                .setColor(primarycol)
-            message.channel.send(tranem);
-        }
+    async execute(mdl, message, args) {
+        const vc = mdl.vcowners.get(message.author.id);
+        if(!vc) return;
+        if(!message.mentions.users.first()) return;
+        const member = await message.guild.members.fetch(message.mentions.users.first().id, { cache: false });
+        if(vc != member.voice.channelID) return;
+        mdl.vcowners.set(member.user.id, member.voice.channelID);
+        mdl.vcowners.delete(message.author.id);
+        message.channel.send(new MessageEmbed()
+            .setColor(mdl.config.pcol)
+            .setDescription(`\`\`\`prolog\nOwnership Transferred\nU :: ${message.mentions.users.first().tag} \`\`\``))
     }
 }

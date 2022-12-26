@@ -1,46 +1,66 @@
-const Discord = require("discord.js");
-const { token, shards, dblToken } = require("../config/config.json");
-const manager = new Discord.ShardingManager('./main/bot.js', {
-    token: token,
+const { ShardingManager } = require('kurasuta');
+const { isMaster } = require("cluster");
+const { Client } = require("discord.js-light");
+const { join } = require('path');
+
+const sharder = new ShardingManager(join(__dirname, 'bot'), {
+    client: Client,
+    clientOptions: {
+        cacheGuilds: true,
+        cacheChannels: false,
+        cacheOverwrites: false,
+        cacheRoles: false,
+        cacheEmojis: false,
+        cachePresences: false,
+        disabledEvents: [
+            "channelCreate",
+            "channelDelete",
+            "channelUpdate",
+            "channelPinsUpdate",
+            "emojiCreate",
+            "emojiDelete",
+            "emojiUpdate",
+            "guildBanAdd",
+            "guildBanRemove",
+            "guildIntegrationsUpdate",
+            "guildUnavailable",
+            "guildUpdate",
+            "guildMemberAdd",
+            "guildMemberRemove",
+            "guildMembersChunk",
+            "guildMemberSpeaking",
+            "guildMemberUpdate",
+            "inviteCreate",
+            "inviteDelete",
+            "messageDelete",
+            "messageUpdate",
+            "messageDeleteBulk",
+            "messageReactionAdd",
+            "messageReactionRemove",
+            "messageReactionRemoveAll",
+            "messageReactionRemoveEmoji",
+            "roleCreate",
+            "roleUpdate",
+            "presenceUpdate",
+            "rateLimit",
+            "typingStart",
+            "userUpdate",
+            "warn",
+            "debug",
+            "error",
+            "webhookUpdate"
+        ]
+    },
+    shardCount: 2,
+    clusterCount: 1,
     respawn: true,
-});
-/*
-const AutoPoster = require('topgg-autoposter')
-
-const ap = AutoPoster(dblToken, manager);
-
-ap.on("posted", () => {
-    console.log("Posted stats on top.gg");
-})
-*/
-manager.on("shardCreate", shard => {
-    console.log(`Created Shard ${shard.id}`)
-    shard.on("message", message => {
-        console.log(`Shard ${shard.id} : ${message._fetchProp || message._eval} : ${message._result}`);
-    });
-
-    shard.on("disconnect", () => {
-        console.log(`Shard ${shard.id} disconnected`);
-    })
-    shard.on("reconnecting", () => {
-        console.log(`Shard ${shard.id} is reconnecting`);
-    })
-
-    shard.on("error", () => {
-        shard.respawn();
-    })
-
-    shard.on("ready", () => {
-        console.log(`Shard ${shard.id} is ready`);
-    })
-
-    shard.on("spawn", () => {
-        console.log(`Shard ${shard.id} spawned`);
-    })
-
-    shard.on("death", () => {
-        console.log(`Shard ${shard.id} died`);
-    })
+    retry: true,
+    development: true,
 });
 
-manager.spawn(shards);
+if(isMaster) {
+    sharder.on("debug", d => { console.log(d) })
+    .on("message", m => { console.log(m); });
+}
+ 
+sharder.spawn();

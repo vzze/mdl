@@ -1,36 +1,38 @@
-const { MessageEmbed } = require(`discord.js`);
-const process = require('process');
-const {prefix, primarycol} = require('../../config/config.json');
+const { MessageEmbed } = require("discord.js-light");
 
 module.exports = {
     name: 'stats',
-    description: `Displays the stats of the bot.`,
-    usage: `\`${prefix}stats\``,
-    cooldown: 5,
+    aliases: ['st'],
+    description: "Shows the bots stats.",
+    usage: ['stats'],
+    cooldown: 3,
     premium: "Non-Premium",
-    async execute(client, message, args) {
-        let seconds = Math.floor(process.uptime());
-        let minutes = Math.floor(seconds / 60);
-        let hours = Math.floor(minutes / 60);
-        let days = Math.floor(hours / 24);
-        seconds %= 60;
-        minutes %= 60;
-        hours %= 24;
-
-        const memoryused = Math.floor(process.memoryUsage().heapUsed / 1024 / 1024);
-
-        const prom = await client.shard.fetchClientValues('guilds.cache.size').catch(e => console.log(e));
-        const glds = prom.reduce((u, guildCount) => u + guildCount, 0);
-
-        const statembed = new MessageEmbed()
-            .setColor(primarycol)
-            .setAuthor(`${message.client.user.tag}`, `${message.client.user.displayAvatarURL()}`)
-            .addField('Memory Usage', `${memoryused} MB`, true)
-            .addField('Guilds', `${glds}`, true)
-            .addField('Uptime', `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`, false)
-            .addField('Latency', `${client.ws.ping}ms`, true)
-            .setFooter(`vzze`);
-        message.channel.send(statembed);
-
+    async execute(mdl, message, args) {
+        const [ut, mastermem, clusters, ping] = await mdl.stats();
+        const members = clusters.reduce((m, c) => m + c[3], 0);
+        const guilds = clusters.reduce((g, c) => g + c[4], 0);
+        let uptime = `Uptime               :: ${ut[0]}`;
+        let p = `\nPing    :: ${ping} ms`;
+        while(p.length<21) p += " ";
+        p += `    ${ut[1]}`;
+        let gs = `\nGuilds  :: ${guilds}`;
+        while(gs.length<21) gs += " ";
+        gs += `    ${ut[2]}`;
+        let mems = `\nMembers :: ${members}`;
+        while(mems.length<21) mems += " ";
+        mems += `    ${ut[3]}`;
+        let clustermap = "";
+        clusters.forEach(cluster => {
+            let tempstring = `Cluster ${cluster[0]}`;
+            while(tempstring.length<21) tempstring += " ";
+            tempstring += `:: Shards :: ${cluster[1].length}`;
+            tempstring += `\n                        ${cluster[2]} mb`;
+            clustermap += tempstring + "\n";
+        })
+        clustermap = `Master Memory Usage  :: ${mastermem} mb\n` + clustermap;
+        message.channel.send(new MessageEmbed()
+            .setDescription("```prolog" + "\n" + clustermap + "\n" + uptime + p + gs+ mems + "```")
+            .setColor(mdl.config.pcol)
+        )
     }
 }

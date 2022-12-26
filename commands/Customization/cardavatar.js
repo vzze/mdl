@@ -1,68 +1,43 @@
-const { MessageEmbed, DiscordAPIError } = require(`discord.js`);
-const { prefix, primarycol, errcol } = require('../../config/config.json')
-const users = require('../../data/users');
+const { MessageEmbed } = require("discord.js-light");
 
 module.exports = {
     name: 'cardavatar',
+    aliases: ['ca', 'cav', 'cavatar'],
     description: 'Choose to display or to not display your avatar on the rank card.',
-    usage: `\`${prefix}cardavatar\``,
+    usage: ['cardavatar'],
     cooldown: 3,
     premium: "Non-Premium",
-    async execute(client, message, args) {
-        let u = await users.findOne({ user_id: message.author.id });
-        var ok = 1;
-        if(u==undefined) {
-            const newU = new users({
-                user_id: message.author.id, 
-                xp: 0, 
-                level: 0, 
-                user_name: `${message.author.tag}`,
-                rankcardlink: 0,
-                rankavatar: 1,
-                prcolor: "0",
-                seccolor: "0",
-                quote: "0"
-            });
-            newU.save();
-            u = newU;
-            setTimeout(() => {}, 3000);
-        }
+    async execute(mdl, message, args) {
+        const u = await mdl.db.users.findOne({ user_id: message.author.id });
+        if(!u) u = await mdl.db.createnewuser(message.author.id, 0, message.author.tag);
         switch(u.rankavatar) {
             case 1:
-                try {
-                    await u.updateOne({ rankavatar: 0 })
-                    await u.save();
-                } catch (e) {
-                    ok = 0;
-                    const ad3dembed = new MessageEmbed()
-                        .setColor(errcol)
-                        .setDescription(`**Caught an error.**`)
-                    message.channel.send(ad3dembed);
-                }
-                if(ok==1) {
-                    const l3embed = new MessageEmbed()
-                        .setColor(primarycol)
-                        .setDescription(`**Successfully updated your card avatar to invisible.**`)
-                    message.channel.send(l3embed); 
-                }
+                await u.updateOne({ rankavatar: 0 })
+                    .then(() => {
+                        message.channel.send(new MessageEmbed()
+                            .setColor(mdl.config.pcol)
+                            .setDescription("``` Your avatar will be invisible. ```"));
+                    })
+                    .catch(e => {
+                        message.channel.send(new MessageEmbed()
+                            .setColor(mdl.config.errcol)
+                            .setDescription("``` Caught an error. ```"))
+                    });
+                await u.save();
             break;
             case 0:
-                try {
-                    await u.updateOne({ rankavatar: 1 })
-                    await u.save();
-                } catch (e) {
-                    ok = 0;
-                    const ad3dembed = new MessageEmbed()
-                        .setColor(errcol)
-                        .setDescription(`**Caught an error.**`)
-                    message.channel.send(ad3dembed);
-                }
-                if(ok==1) {
-                    const l3embed = new MessageEmbed()
-                        .setColor(primarycol)
-                        .setDescription(`**Successfully updated your card avatar to visible.**`)
-                    message.channel.send(l3embed); 
-                }
+                await u.updateOne({ rankavatar: 1 })
+                .then(() => {
+                    message.channel.send(new MessageEmbed()
+                        .setColor(mdl.config.pcol)
+                        .setDescription("``` Your avatar will be visible. ```"));
+                })
+                .catch(e => {
+                    message.channel.send(new MessageEmbed()
+                        .setColor(mdl.config.errcol)
+                        .setDescription("``` Caught an error. ```"))
+                });
+                await u.save();
             break;
         }
     }

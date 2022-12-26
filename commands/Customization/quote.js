@@ -1,69 +1,46 @@
-const { MessageEmbed, DiscordAPIError } = require(`discord.js`);
-const { prefix, primarycol, errcol } = require('../../config/config.json')
-const users = require('../../data/users');
+const { MessageEmbed } = require("discord.js-light");
 
 module.exports = {
     name: 'quote',
-    description: 'Put a quote on your level card! \n Put the value 0 to remove it.',
-    usage: `\`${prefix}quote\` hello! \n \`${prefix}quote\` 0`,
+    aliases: ['q'],
+    description: 'Add a custom quote to your level card',
+    usage: ['quote <Query>'],
     cooldown: 3,
     premium: "Non-Premium",
-    async execute(client, message, args) {
-        let u = await users.findOne({ user_id: message.author.id });
-        if(u==undefined) {
-            const newU = new users({
-                user_id: message.author.id, 
-                xp: 0, 
-                level: 0, 
-                user_name: `${message.author.tag}`,
-                rankcardlink: 0,
-                rankavatar: 1,
-                prcolor: "0",
-                seccolor: "0",
-                quote: "0"
-            });
-            newU.save();
-            u = newU;
-            setTimeout(() => {}, 3000);
+    async execute(mdl, message, args) {
+        if(!args[0]) {
+
         }
+        const badwords = ['nigger', 'n1gger', 'nigg3r', 'n1gg3r', 'niggur', 'n1ggur', 'nigur', 'n1gur'];
         let string = "";
-        if(!args[0]) return;
-        args.forEach(word => {
-            string = string + word + " ";
-        })
-        if(string == '0 ') {
-            try{
-                await u.updateOne({ quote: "0"});
-                await u.save();
-            } catch(e) {
-                let err = new MessageEmbed()
-                    .setDescription(`Caught an error.`)
-                    .setColor(errcol)
-                return message.channel.send(err);
+        args.forEach(w => string += w + " ");
+        string.trim();
+        let check = string.toLowerCase();
+        for(const word of badwords) {
+            if(check.indexOf(word) != -1) {
+                return message.channel.send(new MessageEmbed()
+                    .setColor(mdl.config.errcol)
+                    .setDescription("``` No bad words. ```"));
             }
-            let removal = new MessageEmbed()
-                .setDescription('Removed your quote.')
-                .setColor(primarycol)
-            return message.channel.send(removal);
         }
-        if(string.length >= 255) {
-            let ler = new MessageEmbed()
-                .setDescription("The quote is too long!")
-                .setColor(errcol)
-            return message.channel.send(ler);
+        if(string.length > 255) {
+            return message.channel.send(new MessageEmbed()
+                .setColor(mdl.config.errcol)
+                .setDescription("``` Length of quote must be under 255 characters. ```"));
         }
-        try{
-            await u.updateOne({ quote: `${string}`});
-            await u.save();
-        } catch(e) {
-            let err = new MessageEmbed()
-                .setDescription(`Caught an error.`)
-                .setColor(errcol)
-            return message.channel.send(err);
-        }
-        let f = new MessageEmbed()
-            .addField('Set quote as', `${string}`)
-            .setColor(primarycol)
-        message.channel.send(f);
+        const u = await mdl.db.users.findOne({ user_id: message.author.id });
+        if(!u) u = await mdl.db.createnewuser(message.author.id, 0, message.author.tag);
+        await u.updateOne({ quote: string })
+            .then(() => {
+                message.channel.send(new MessageEmbed()
+                    .setDescription("``` Updated your quote. ```")
+                    .setColor(mdl.config.pcol));
+            })
+            .catch(e => {
+                message.channel.send(new MessageEmbed()
+                    .setDescription("``` Caught an error. ```")
+                    .setColor(mdl.config.errcol));
+            })
+        await u.save();
     }
 }

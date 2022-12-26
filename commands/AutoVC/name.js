@@ -1,34 +1,37 @@
-const { MessageEmbed } = require("discord.js")
-const { prefix, errcol } = require("../../config/config.json");
-const { vccoll, linker } = require("../../events/clientEvents/voiceStateUpdate")
-const { serverlist } = require("../../events/clientEvents/ready");
+const { MessageEmbed } = require("discord.js-light");
 
 module.exports = {
-    name: `name`,
-    description: `Changes the name of your VC.`,
-    usage: `\`${prefix}name\``,
-    cooldown: 10,
+    name: 'name',
+    aliases: ['n'],
+    description: 'Changes the name of your Voice Channel.',
+    usage: ['name <Query>'],
+    cooldown: 3,
     premium: "Premium",
-    async execute(client, message, args) {
-        if(!serverlist.has(message.guild.id)) return;
+    async execute(mdl, message, args) {
         if(!args[0]) return;
-        let check = await vccoll.get(message.author.id);
-        if(!check) return;
-        if(check.owner==false) return;
-        let chan = check.vc;
-        let txtchan = linker.get(chan.id);
+        const member = await message.guild.members.fetch(message.author.id, { cache: false });
+        const vc = mdl.vcowners.get(member.user.id);
+        if(!vc) return;
+        if(member.voice.channelID != vc) return;
         let string = "";
-        args.forEach(word => {
-            string = string + word + " ";
-        })
-        try {
-        await chan.edit({ name: string})
-        if(txtchan) await txtchan.edit({ name: string})
-        } catch (e) {
-            let errem = new MessageEmbed()
-                .setDescription("Encountered an error while trying to rename.")
-                .setColor(errcol)
-            txtchan.send(errem);
+        args.forEach(word => string += word + " ");
+        string.trim();
+        const chan = await message.guild.channels.fetch(vc, { cache: false });
+        const txt = mdl.linker.get(vc);
+        if(txt) { 
+            txt.setName(string)
+                .catch(e => message.channel.send(new MessageEmbed()
+                    .setColor(mdl.config.errcol)
+                    .setDescription("``` Caught an error. ```")));
         }
+        chan.setName(string)
+            .then(() => {
+                message.channel.send(new MessageEmbed()
+                    .setColor(mdl.config.pcol)
+                    .setDescription(`\`\`\`prolog\nChanged Name :: ${string}\n\`\`\``));
+            })
+            .catch(e => message.channel.send(new MessageEmbed()
+                .setColor(mdl.config.errcol)
+                .setDescription("``` Caught an error. ```")));
     }
 }

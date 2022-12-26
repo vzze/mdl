@@ -1,67 +1,53 @@
-const { MessageEmbed, DiscordAPIError } = require(`discord.js`);
-const { prefix, primarycol, errcol } = require('../../config/config.json')
-const users = require('../../data/users');
+const { MessageEmbed } = require("discord.js-light");
 
 module.exports = {
     name: 'secondarycolor',
-    description: 'Changes the secondary color of your level card. \n Put the value to 0 to remove it. \n Here\'s a [colour picker](https://www.google.com/search?q=color+picker)!',
-    usage: `\`${prefix}secondarycolor\` #696969 \n \`${prefix}secondarycolor\` 0`,
+    aliases: ['sc', 'secondaryc', 'scolor', 'scol'],
+    description: 'Change the secondary color of the rank card. Only accepts HEX Values',
+    usage: ['secondarycolor <Hex>', 'sc #000000', 'secondarycolor'],
     cooldown: 3,
     premium: "Non-Premium",
-    async execute(client, message, args) {
-        let u = await users.findOne({ user_id: message.author.id });
-        if(u==undefined) {
-            const newU = new users({
-                user_id: message.author.id, 
-                xp: 0, 
-                level: 0, 
-                user_name: `${message.author.tag}`,
-                rankcardlink: 0,
-                rankavatar: 1,
-                prcolor: "0",
-                seccolor: "0",
-                quote: "0"
-            });
-            newU.save();
-            u = newU;
-            setTimeout(() => {}, 3000);
-        }
-
-        if(!args[0]) return;
-        if(args[0] == 0) {
-            try{
-                await u.updateOne({ seccolor: `0`});
-                await u.save();
-            } catch(e) {
-                let err = new MessageEmbed()
-                    .setDescription(`Caught an error.`)
-                    .setColor(errcol)
-                return message.channel.send(err);
-            }
-            let removal = new MessageEmbed()
-                .setDescription('Removed your secondary color.')
-                .setColor(primarycol)
-            return message.channel.send(removal);
-        }
-        let string = args[0];
-        if(string.length != 7 || string.indexOf("#") == -1 || string.indexOf("#") != 0) {
-            let ler = new MessageEmbed()
-                .setDescription("Must be a HEX value.")
-                .setColor(errcol)
-            return message.channel.send(ler);
-        }
-        try{
-            await u.updateOne({ seccolor: `${string}`});
+    async execute(mdl, message, args) {
+        const u = await mdl.db.users.findOne({ user_id: message.author.id });
+        if(!u) u = await mdl.db.createnewuser(message.author.id, 0, message.author.tag);
+        if(!args[0]) {
+            await u.updateOne({ seccolor: 0 })
+                    .then(() => {
+                        message.channel.send(new MessageEmbed()
+                            .setColor(mdl.config.pcol)
+                            .setDescription("``` Updated to default secondary color. ```"));
+                    })
+                    .catch(e => {
+                        message.channel.send(new MessageEmbed()
+                            .setColor(mdl.config.errcol)
+                            .setDescription("``` Caught an error. ```"))
+                    });
             await u.save();
-        } catch(e) {
-            let err = new MessageEmbed()
-                .setDescription(`Caught an error.`)
-                .setColor(errcol)
-            return message.channel.send(err);
+        } else {
+            function c(check) {
+                let chars = check.split();
+                for(var i = 1; i < 7; i++) {
+                    if(chars[i] >= 'g') return false;
+                }
+                return true;
+            }
+            if(!args[0].startsWith("#") || args[0].length != 7 || !c(args[0])) {
+                return message.channel.send(new MessageEmbed()
+                    .setColor(mdl.config.errcol)
+                    .setDescription("``` Must be a HEX ```"));
+            }
+            await u.updateOne({ seccolor: args[0] })
+                    .then(() => {
+                        message.channel.send(new MessageEmbed()
+                            .setColor(mdl.config.pcol)
+                            .setDescription("``` Updated your secondary color. ```"));
+                    })
+                    .catch(e => {
+                        message.channel.send(new MessageEmbed()
+                            .setColor(mdl.config.errcol)
+                            .setDescription("``` Caught an error. ```"))
+                    });
+            await u.save();
         }
-        let f = new MessageEmbed()
-            .setDescription(`Set secondary color as \`${string}\``)
-            .setColor(string)
-        message.channel.send(f);
     }
 }
