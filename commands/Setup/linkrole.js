@@ -40,8 +40,7 @@ module.exports = {
                 message.guild.roles.cache.clear();
                 const c = await mdl.db.ranks.findOne({ guild_id: `${message.guild.id}`, role_id: r.id });
                 if(c) {
-                    await c.updateOne({ rank_id: args[1] });
-                    await c.save()
+                    await c.updateOne({ rank_id: args[1] })
                         .then(() => {
                             return message.channel.send(new MessageEmbed()
                                 .setDescription("```prolog\n" + `Linked Role :: ${r.name}\nLevel       :: ${args[1]}\n` + "```")

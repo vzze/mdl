@@ -12,6 +12,10 @@ const sharder = new ShardingManager(join(__dirname, 'bot'), {
         cacheRoles: false,
         cacheEmojis: false,
         cachePresences: false,
+        messageCacheMaxSize: 0,
+        messageCacheLifetime: 1,
+        messageSweepInterval: 1,
+        messageEditHistoryMaxSize: 1,
         disabledEvents: [
             "channelCreate",
             "channelDelete",
@@ -55,7 +59,7 @@ const sharder = new ShardingManager(join(__dirname, 'bot'), {
     clusterCount: 1,
     respawn: true,
     retry: true,
-    development: true,
+    development: false,
 });
 
 if(isMaster) {

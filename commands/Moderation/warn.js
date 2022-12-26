@@ -9,15 +9,18 @@ module.exports = {
     premium: "Non-Premium",
     async execute(mdl, message, args) {
         const member = await message.guild.members.fetch(message.author.id, { cache: false });
+        await message.guild.roles.fetch();
         if(!member.hasPermission("MANAGE_ROLES") && !member.hasPermission("ADMINISTRATOR")) {
+            message.guild.roles.cache.clear();
             return message.channel.send(new MessageEmbed()
                 .setDescription("``` You don\`t have permissions to manage roles. ```")
                 .setColor(mdl.config.errcol))
         }
+        message.guild.roles.cache.clear();
         const target = message.mentions.users.first();
         if(!target) return;
-        let pos = message.content.indexOf(">");
-        let warn = message.content.slice(pos+1, message.content.length);
+        let pos = message.content.indexOf(`${target.id}>`);
+        let warn = message.content.slice(pos+1+`${target.id}>`.length, message.content.length);
         warn = warn.trim();
         if(warn == "" || warn == undefined) warn = "No information provided.";
         let m = await mdl.db.members.findOne({ user_id: target.id, guild_id: message.guild.id });
@@ -28,6 +31,5 @@ module.exports = {
         warn = `Moderator :: ${message.author.tag} :: ${warn}`;
         m.warns.push(warn);
         await m.updateOne({ warns: m.warns });
-        await m.save();
     }
 }

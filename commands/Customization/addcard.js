@@ -36,7 +36,6 @@ module.exports = {
                         .setColor(mdl.config.errcol)
                         .setDescription("``` Caught an error. ```"));
                 });
-            await u.save();
         } else {
             message.channel.send(new MessageEmbed()
                 .setColor(mdl.config.errcol)

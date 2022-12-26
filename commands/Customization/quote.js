@@ -9,7 +9,20 @@ module.exports = {
     premium: "Non-Premium",
     async execute(mdl, message, args) {
         if(!args[0]) {
-
+            const u = await mdl.db.users.findOne({ user_id: message.author.id });
+            if(!u) u = await mdl.db.createnewuser(message.author.id, 0, message.author.tag);
+            await u.updateOne({ quote: "0" })
+                .then(() => {
+                    message.channel.send(new MessageEmbed()
+                        .setDescription("``` Removed your quote. ```")
+                        .setColor(mdl.config.pcol));
+                })
+                .catch(e => {
+                    message.channel.send(new MessageEmbed()
+                        .setDescription("``` Caught an error. ```")
+                        .setColor(mdl.config.errcol));
+                })
+            return;
         }
         const badwords = ['nigger', 'n1gger', 'nigg3r', 'n1gg3r', 'niggur', 'n1ggur', 'nigur', 'n1gur'];
         let string = "";
@@ -41,6 +54,5 @@ module.exports = {
                     .setDescription("``` Caught an error. ```")
                     .setColor(mdl.config.errcol));
             })
-        await u.save();
     }
 }

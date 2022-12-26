@@ -1,4 +1,5 @@
 const { Collection } = require("discord.js-light");
+const TOPGG = require("@top-gg/sdk");
 const { BaseCluster } = require("kurasuta");
 const config = require("../config/config.json");
 const DB = require("./extensions/database");
@@ -24,6 +25,8 @@ module.exports = class extends BaseCluster {
         this.config = config;
 
         this.db = new DB();
+
+        this.topgg = new TOPGG.Api(this.config.topgg);
     }
     commandLoader() {
         for(const dir of fs.readdirSync("./commands/")) {
@@ -82,6 +85,19 @@ module.exports = class extends BaseCluster {
             });
         })
     }
+    async refreshTOPGG() {
+        await this.client.shard.broadcastEval(`
+            ( () => {
+                const guilds = this.shard.client.guilds.cache.size;
+                return [this.shard.shards, guilds ] 
+        })()
+        `)
+        .then(cluster => {
+            const shards = cluster.reduce((sh, c) => sh + c[0].length, 0);
+            const guilds = cluster.reduce((g, c) => g + c[1], 0);
+            this.topgg.postStats({ serverCount: guilds, shardCount: shards });
+        }).catch(err => console.log(err));
+    }
     launch() {
         this.eventLoader();
         this.commandLoader();
@@ -106,7 +122,19 @@ module.exports = class extends BaseCluster {
                     });
             });
         }, 30000);
-        this.client.setInterval(async () => { this.refreshTop(); }, 1800000);
-        this.client.login(this.config.token);
+        this.client.setInterval(() => {
+            this.client.sweepChannels();
+            this.client.sweepUsers();
+            this.client.guilds.cache.forEach(g => {
+                g.members.cache.clear();
+                g.roles.cache.clear();
+            });
+        }, 120000)
+        this.client.setInterval(() => { 
+            this.refreshTop();
+            this.refreshTOPGG()
+            this.client.guilds.cache.forEach(g => { g.roles.cache.clear(); })
+        }, 1800000);
+        this.client.login(this.config.token);;
     }
 }

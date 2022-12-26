@@ -25,6 +25,5 @@ module.exports = {
                         .setColor(mdl.config.errcol)
                         .setDescription("``` Caught an error. ```"));
                 });
-        await u.save();
     }
 }

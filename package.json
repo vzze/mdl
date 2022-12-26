@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/vzze/mdl#readme",
   "dependencies": {
+    "@top-gg/sdk": "^3.0.9",
     "bufferutil": "^4.0.3",
     "canvas": "^2.6.1",
     "discord.js-light": "^3.5.0",

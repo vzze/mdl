@@ -22,7 +22,6 @@ module.exports = {
                             .setColor(mdl.config.errcol)
                             .setDescription("``` Caught an error. ```"))
                     });
-            await u.save();
         } else {
             function c(check) {
                 let chars = check.split();
@@ -47,7 +46,6 @@ module.exports = {
                             .setColor(mdl.config.errcol)
                             .setDescription("``` Caught an error. ```"))
                     });
-            await u.save();
         }
     }
 }

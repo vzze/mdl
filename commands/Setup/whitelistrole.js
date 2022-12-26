@@ -36,11 +36,10 @@ module.exports = {
                 }
                 message.guild.roles.cache.clear();
                 const c = await mdl.db.servers.findOne({ guild_id: `${message.guild.id}` });
-                await c.updateOne({ whitelisterolevc: args[0] });
                 let obj = mdl.pservers.get(message.guild.id);
                 obj.wrole = args[0];
                 mdl.pservers.set(message.guild.id, obj);
-                await c.save()
+                await c.updateOne({ whitelisterolevc: args[0] })
                     .then(() => {
                         return message.channel.send(new MessageEmbed()
                             .setDescription("```prolog\n" + `Whitelisted Role :: ${r.name}\n` + "```")

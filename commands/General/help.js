@@ -22,7 +22,7 @@ module.exports = {
                     + temp.map((m, i) => `${(i % 3 == 0) ? stringer(m) : ""}`).join("").trim()
                     + "\n                  "
                     + temp.map((m, i) => `${(i % 3 == 1) ? stringer(m) : ""}`).join("").trim()
-                    + "\nvz help <Module>  "
+                    + "\nmdl help <Module> "
                     + temp.map((m, i) => `${(i % 3 == 2) ? stringer(m) : ""}`).join("").trim()
                     + "\n```"
                 )

@@ -23,7 +23,6 @@ module.exports = {
                             .setColor(mdl.config.errcol)
                             .setDescription("``` Caught an error. ```"))
                     });
-                await u.save();
             break;
             case 0:
                 await u.updateOne({ rankavatar: 1 })
@@ -37,7 +36,6 @@ module.exports = {
                         .setColor(mdl.config.errcol)
                         .setDescription("``` Caught an error. ```"))
                 });
-                await u.save();
             break;
         }
     }

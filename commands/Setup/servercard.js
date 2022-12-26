@@ -9,11 +9,14 @@ module.exports = {
     premium: "Premium",
     async execute(mdl, message, args) {
         const member = await message.guild.members.fetch(message.author.id, { cache: false });
+        await message.guild.roles.fetch();
         if(!member.hasPermission("MANAGE_GUILD") && !member.hasPermission("ADMINISTRATOR")) {
+            message.guild.roles.cache.clear();
             return message.channel.send(new MessageEmbed()
                 .setDescription("``` You don\`t have permissions to manage roles. ```")
                 .setColor(mdl.config.errcol))
         }
+        message.guild.roles.cache.clear();
         if(!args[0]) {
             return message.channel.send(new MessageEmbed()
                 .setColor(mdl.config.errcol)
@@ -50,7 +53,6 @@ module.exports = {
                         .setColor(mdl.config.errcol)
                         .setDescription("``` Caught an error. ```"));
                 });
-            await u.save();
         } else {
             message.channel.send(new MessageEmbed()
                 .setColor(mdl.config.errcol)

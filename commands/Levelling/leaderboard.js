@@ -50,7 +50,7 @@ module.exports = {
                 mainbody += string + "\n";
             }
             message.channel.send(new MessageEmbed()
-                .addField("Global Leaderboard","```prolog\n" + header + mainbody + "```")
+                .addField(`${message.guild.name} Leaderboard`,"```prolog\n" + header + mainbody + "```")
                 .setColor(mdl.config.pcol) 
             )
     }
